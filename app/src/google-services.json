@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "649118494658",
+    "firebase_url": "https://farm-manager-helper-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "farm-manager-helper",
+    "storage_bucket": "farm-manager-helper.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649118494658:android:a9383ade81a0bb8e65f05b",
+        "android_client_info": {
+          "package_name": "com.example.farmmanagerhelper"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "649118494658-qgm3phocgkbedie9dkbpaogvs9m6m8je.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWll45iumU8cXeHVhRieKgvGNQtOAA9Mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "649118494658-qgm3phocgkbedie9dkbpaogvs9m6m8je.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
