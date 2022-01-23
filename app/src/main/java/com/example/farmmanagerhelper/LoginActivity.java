@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -14,8 +16,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button openRegisterAccountActivity = findViewById((R.id.btnRegisterNewUserAcitivty));
+        // FireBase
+        FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
 
+        // UI components
+        Button openRegisterAccountActivity = findViewById((R.id.btnRegisterNewUserAcitivty));
         Button logUserIn = findViewById(R.id.btnLoginUser);
 
         openRegisterAccountActivity.setOnClickListener(new View.OnClickListener() {
