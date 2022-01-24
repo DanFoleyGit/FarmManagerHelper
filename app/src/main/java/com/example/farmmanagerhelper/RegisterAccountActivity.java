@@ -27,8 +27,6 @@ public class RegisterAccountActivity extends AppCompatActivity {
         Button registerAccountButton = findViewById(R.id.btnRegisterAccount);
 
 
-        // check the passwords match
-
         registerAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +49,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
         TextView errorMsg = findViewById(R.id.txtRegisterAccountErrorMsg);
 
         while(isValid) {
-            isValid = checkFieldsAreNotEmpty(registerEmail, registerPassword, registerPasswordConfirm);
+            isValid = UserServices.checkFieldsAreNotEmpty(registerEmail, registerPassword, registerPasswordConfirm);
             if(isValid == false)
             {
                 errorMsg.setText("All fields Are Required");
@@ -60,18 +58,33 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
             errorMsg.setText("");
 
-
-            isValid = checkPasswords(registerPassword, registerPasswordConfirm);
+            isValid = UserServices.validateEmail(registerEmail);
             if(isValid == false)
             {
+                errorMsg.setText("Email not in correct format");
                 break;
             }
 
-            isValid = validateEmail(registerEmail);
+            errorMsg.setText("");
+
+            isValid = UserServices.checkPasswordLength(registerPassword);
             if(isValid == false)
             {
+                errorMsg.setText("Passwords must be at least 8 characters");
                 break;
             }
+
+            errorMsg.setText("");
+
+
+            isValid = UserServices.checkPasswords(registerPassword, registerPasswordConfirm);
+            if(isValid == false)
+            {
+                errorMsg.setText("Passwords not the same");
+                break;
+            }
+
+            errorMsg.setText("");
 
             if(isValid)
             {
@@ -84,57 +97,4 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
     }
 
-    private boolean checkFieldsAreNotEmpty(EditText email, EditText pWord, EditText pWordConf)
-    {
-        if(TextUtils.isEmpty(email.getText().toString()) ||
-                TextUtils.isEmpty(pWord.getText().toString()) ||
-                TextUtils.isEmpty(pWordConf.getText().toString()))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
-    // check passwords match
-    private boolean checkPasswords(EditText pWord, EditText pWordCon)
-    {
-        Log.d("password is ", pWord.getText().toString());
-        Log.d("password confirm is ", pWordCon.getText().toString());
-        if(!pWord.getText().toString().equals(pWordCon.getText().toString()))
-        {
-            Toast toast = Toast.makeText(this, "Passwords not the same", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-
-        //check the length of password
-        if(pWord.getText().toString().length() < 8)
-        {
-            Toast toast = Toast.makeText(this, "Password is too short. Needs to have at least 8 characters.", Toast.LENGTH_SHORT);
-            toast.show();
-            return false;
-        }
-
-        // TODO
-        // add Regex to check if the account has upper and lowercase and a number
-
-        return true;
-    }
-
-    // Check if the password is in email format allowing for text.text@mailprovider.co.uk
-    private boolean validateEmail(EditText email)
-    {
-        String regex = "^^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
-        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-
-        if (email.getText().toString().matches("^^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
-        {
-            return true;
-        }
-        Toast toast = Toast.makeText(this, "Email not in correct format", Toast.LENGTH_SHORT);
-        toast.show();
-        return false;
-
-    }
 }

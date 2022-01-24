@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#364CAF50"
     tools:context=".RegisterAccountActivity">
 
     <TextView
@@ -49,8 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="52dp"
         android:ems="10"
-        android:inputType="textPassword"
         android:hint="Confirm Password"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/btnRegisterAccount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
