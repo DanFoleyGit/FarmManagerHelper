@@ -4,6 +4,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.regex.Pattern;
 
 
@@ -66,5 +68,11 @@ public class UserServices {
 
         return false;
 
+    }
+
+    //signs user out
+    public static void SignOutAccount(){
+        Log.d("Signing out","User signed out");
+        FirebaseAuth.getInstance().signOut();
     }
 }

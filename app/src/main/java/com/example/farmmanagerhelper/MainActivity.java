@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
 
         Button LoginActivity = findViewById((R.id.LoginActivity));
 
+        Button signOut = findViewById(R.id.btnMainSignout);
+
         LoginActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,10 +32,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        // takes in a class passed to it and opens it
-//        private void openActivity(Class activityClass) {
-//            Intent intent = new Intent(this, activityClass);
-//            startActivity(intent);
-//        }
+        signOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserServices.SignOutAccount();
+
+                Toast.makeText(MainActivity.this, "User signed out",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }
