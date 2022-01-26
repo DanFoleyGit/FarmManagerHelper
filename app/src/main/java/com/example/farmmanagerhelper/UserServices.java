@@ -41,6 +41,17 @@ public class UserServices {
         return true;
     }
 
+    public static boolean checkEmailAndpasswordAreNotEmpty(EditText email, EditText pWord)
+    {
+        if(TextUtils.isEmpty(email.getText().toString()) ||
+                TextUtils.isEmpty(pWord.getText().toString()) )
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public static boolean checkFieldsAreNotEmpty(EditText email, EditText pWord, EditText pWordConf)
     {
         if(TextUtils.isEmpty(email.getText().toString()) ||

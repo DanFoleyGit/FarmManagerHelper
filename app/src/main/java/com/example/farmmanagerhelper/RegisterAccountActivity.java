@@ -1,5 +1,6 @@
 package com.example.farmmanagerhelper;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -57,8 +58,9 @@ public class RegisterAccountActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(this, "User logged in already", Toast.LENGTH_SHORT);
             toast.show();
 
-            // TODO
             // launch main menu
+            startActivity(new Intent(RegisterAccountActivity.this, MainActivity.class));
+            finish();
         }
     }
 
@@ -74,79 +76,97 @@ public class RegisterAccountActivity extends AppCompatActivity {
         EditText registerFirstName = findViewById(R.id.txtRegisterAccountFname);
         EditText registerLastName = findViewById(R.id.txtRegisterAccountLname);
 
-        TextView errorMsg = findViewById(R.id.txtRegisterAccountErrorMsg);
+        TextView RegisterAccountErrorMsg = findViewById(R.id.txtRegisterAccountErrorMsg);
+
 
         while(isValid) {
             isValid = UserServices.checkFieldsAreNotEmpty(registerEmail, registerPassword, registerPasswordConfirm);
             if(isValid == false)
             {
-                errorMsg.setText("All fields Are Required");
+                RegisterAccountErrorMsg.setText("All fields Are Required");
                 break;
             }
 
-            errorMsg.setText("");
+            RegisterAccountErrorMsg.setText("");
 
             isValid = UserServices.validateEmail(registerEmail);
             if(isValid == false)
             {
-                errorMsg.setText("Email not in correct format");
+                RegisterAccountErrorMsg.setText("Email not in correct format");
                 break;
             }
 
-            errorMsg.setText("");
+            RegisterAccountErrorMsg.setText("");
 
             isValid = UserServices.checkPasswordLength(registerPassword);
             if(isValid == false)
             {
-                errorMsg.setText("Passwords must be at least 8 characters");
+                RegisterAccountErrorMsg.setText("Passwords must be at least 8 characters");
                 break;
             }
 
-            errorMsg.setText("");
+            RegisterAccountErrorMsg.setText("");
 
 
             isValid = UserServices.checkPasswords(registerPassword, registerPasswordConfirm);
             if(isValid == false)
             {
-                errorMsg.setText("Passwords not the same");
+                RegisterAccountErrorMsg.setText("Passwords not the same");
                 break;
             }
 
-            errorMsg.setText("");
+            RegisterAccountErrorMsg.setText("");
 
             if(isValid)
             {
+                // add user to firebase authentification
                 Log.d("VALIDATION:", "success");
-
-
-                mAuth.createUserWithEmailAndPassword(registerEmail.getText().toString(), registerPassword.getText().toString())
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-//                        Toast.makeText(RegisterAccountActivity.this, "Validation Success in onComplete",
-//                                Toast.LENGTH_SHORT).show();
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-
-                            // add user to database
-                            // updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterAccountActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            // updateUI(null);
-                        }
-                    }
-                });
+                addUserToFirebaseAuth(registerEmail.getText().toString(), registerPassword.getText().toString(),RegisterAccountErrorMsg);
 
                 break;
             }
 
         }
 
+    }
+
+    private void addUserToFirebaseAuth(String email, String password, TextView RegisterAccountErrorMsg) {
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+
+                        if (task.isSuccessful())
+                        {
+                            Log.d("", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+
+                            // clear error message
+                            RegisterAccountErrorMsg.setText("");
+
+
+                            // add user to database
+
+                            // Go to mainActivity
+                            startActivity(new Intent(RegisterAccountActivity.this, MainActivity.class));
+                            finish();
+
+                        }
+                        else
+                            {
+                            // If sign in fails, display a message to the user.
+                            Log.w("", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(RegisterAccountActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+
+                            // set error message
+                            RegisterAccountErrorMsg.setText("Error Creating Account");
+
+                        }
+                    }
+                });
     }
 
     private void addUserToDatabase(FirebaseUser firebaseUser,EditText registerEmail, EditText registerFirstName, EditText registerLastName) {
