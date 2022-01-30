@@ -121,7 +121,14 @@ public class RegisterAccountActivity extends AppCompatActivity {
             {
                 // add user to firebase authentification
                 Log.d("VALIDATION:", "success");
-                addUserToFirebaseAuth(registerEmail.getText().toString(), registerPassword.getText().toString(),RegisterAccountErrorMsg);
+
+                // create user
+                User user = new User(registerFirstName.getText().toString(),
+                        registerLastName.getText().toString(),
+                        registerEmail.getText().toString());
+
+                addUserToFirebaseAuth(registerEmail.getText().toString(), registerPassword.getText().toString(),
+                        RegisterAccountErrorMsg, user);
 
                 break;
             }
@@ -130,7 +137,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
     }
 
-    private void addUserToFirebaseAuth(String email, String password, TextView RegisterAccountErrorMsg) {
+    private void addUserToFirebaseAuth(String email, String password, TextView RegisterAccountErrorMsg, User user) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -141,13 +148,15 @@ public class RegisterAccountActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             Log.d("", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
+                            FirebaseUser FirebaseUser = mAuth.getCurrentUser();
 
                             // clear error message
                             RegisterAccountErrorMsg.setText("");
 
 
                             // add user to database
+
+                            //addUserToDatabase(FirebaseUser, user);
 
                             // Go to mainActivity
                             startActivity(new Intent(RegisterAccountActivity.this, MainActivity.class));
@@ -169,12 +178,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 });
     }
 
-    private void addUserToDatabase(FirebaseUser firebaseUser,EditText registerEmail, EditText registerFirstName, EditText registerLastName) {
-
-        // create user
-        User user = new User(registerFirstName.getText().toString(),
-                registerFirstName.getText().toString(),
-                registerEmail.getText().toString());
+    private void addUserToDatabase(FirebaseUser firebaseUser, User user) {
 
         mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
 
