@@ -19,12 +19,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterAccountActivity extends AppCompatActivity {
 
     //Firebase
     private FirebaseAuth mAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference dbRef = database.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +158,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
                             // add user to database
 
-                            //addUserToDatabase(FirebaseUser, user);
+                            addUserToDatabase(FirebaseUser, user);
 
                             // Go to mainActivity
                             startActivity(new Intent(RegisterAccountActivity.this, MainActivity.class));
@@ -180,7 +182,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
     private void addUserToDatabase(FirebaseUser firebaseUser, User user) {
 
-        mDatabase.child("users").child(firebaseUser.getUid()).setValue(user);
+        dbRef.child("users").child(firebaseUser.getUid()).setValue(user);
 
         Toast toast = Toast.makeText(this, "Creating Account", Toast.LENGTH_SHORT);
         toast.show();

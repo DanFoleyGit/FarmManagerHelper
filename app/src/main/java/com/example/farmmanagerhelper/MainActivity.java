@@ -88,10 +88,17 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 
+            // set up as a case satement to allow extra options if needed
             case R.id.MenuLogout:
+                // sign out user
                 UserServices.SignOutAccount();
                 Toast.makeText(MainActivity.this, "User signed out",
                         Toast.LENGTH_SHORT).show();
+
+                // start login intent
+                Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
+                startActivity(intent);
+                finish();
                 break;
 
         }
