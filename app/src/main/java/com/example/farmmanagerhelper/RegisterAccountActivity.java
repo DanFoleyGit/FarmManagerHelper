@@ -158,7 +158,14 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
                             // add user to database
 
-                            addUserToDatabase(FirebaseUser, user);
+                            Toast toast = Toast.makeText(RegisterAccountActivity.this, "Creating Account", Toast.LENGTH_SHORT);
+                            toast.show();
+
+                            if(!DatabaseManager.addUserToDatabase(FirebaseUser, user))
+                            {
+                                toast = Toast.makeText(RegisterAccountActivity.this, "Error", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
 
                             // Go to mainActivity
                             startActivity(new Intent(RegisterAccountActivity.this, MainActivity.class));
@@ -178,15 +185,6 @@ public class RegisterAccountActivity extends AppCompatActivity {
                         }
                     }
                 });
-    }
-
-    private void addUserToDatabase(FirebaseUser firebaseUser, User user) {
-
-        dbRef.child("users").child(firebaseUser.getUid()).setValue(user);
-
-        Toast toast = Toast.makeText(this, "Creating Account", Toast.LENGTH_SHORT);
-        toast.show();
-
     }
 
 }

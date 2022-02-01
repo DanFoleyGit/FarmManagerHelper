@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
             Toast toast = Toast.makeText(MainActivity.this, "User logged in already", Toast.LENGTH_SHORT);
             toast.show();
-            UserEmail.setText("Logged in as\n" + currentUser.getEmail());
+            UserEmail.setText("Hello " + currentUser.getEmail());
 
         }
         else{
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             // set up as a case satement to allow extra options if needed
             case R.id.MenuLogout:
                 // sign out user
+
                 UserServices.SignOutAccount();
                 Toast.makeText(MainActivity.this, "User signed out",
                         Toast.LENGTH_SHORT).show();
