@@ -1,5 +1,6 @@
 package com.example.farmmanagerhelper;
 
+import android.app.usage.NetworkStats;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -80,6 +81,9 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
         TextView RegisterAccountErrorMsg = findViewById(R.id.txtRegisterAccountErrorMsg);
 
+        // Declare user object
+        User user;
+
 
         while(isValid) {
             isValid = UserServices.checkFieldsAreNotEmpty(registerEmail, registerPassword, registerPasswordConfirm);
@@ -125,9 +129,11 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 Log.d("VALIDATION:", "success");
 
                 // create user
-                User user = new User(registerFirstName.getText().toString(),
+
+                user = new User(null,registerFirstName.getText().toString(),
                         registerLastName.getText().toString(),
-                        registerEmail.getText().toString());
+                        registerEmail.getText().toString(), "none");
+
 
                 addUserToFirebaseAuth(registerEmail.getText().toString(), registerPassword.getText().toString(),
                         RegisterAccountErrorMsg, user);
@@ -150,10 +156,16 @@ public class RegisterAccountActivity extends AppCompatActivity {
                         if (task.isSuccessful())
                         {
                             Log.d("", "createUserWithEmail:success");
-                            FirebaseUser FirebaseUser = mAuth.getCurrentUser();
+
 
                             // clear error message
                             RegisterAccountErrorMsg.setText("");
+
+                            // assign userid to user object
+                            // create user
+                            FirebaseUser firebaseUser = mAuth.getCurrentUser(); // user hasnt been created yet
+
+                            user.userId = firebaseUser.getUid();
 
 
                             // add user to database
@@ -161,7 +173,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
                             Toast toast = Toast.makeText(RegisterAccountActivity.this, "Creating Account", Toast.LENGTH_SHORT);
                             toast.show();
 
-                            if(!DatabaseManager.addUserToDatabase(FirebaseUser, user))
+                            if(!DatabaseManager.addUserToDatabase(user))
                             {
                                 toast = Toast.makeText(RegisterAccountActivity.this, "Error", Toast.LENGTH_SHORT);
                                 toast.show();

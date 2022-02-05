@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,10 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         // UI
-        Button LoginActivity = findViewById((R.id.LoginActivity));
+        Button JoinActivity = findViewById((R.id.JoinActivity));
         TextView UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
 
         // check if the user is logged. If they are go to the login activity and close main activity
@@ -42,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
             UserEmail.setText("Hello " + currentUser.getEmail());
 
         }
+        // check if the user is in a farm
+        if(checkUserIsInFarm(currentUser))
+        {
+            Log.d("MainActivity", "User checked and is in farm");
+            Toast toast = Toast.makeText(MainActivity.this, "User checked", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+
         else{
             Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
             startActivity(intent);
@@ -49,30 +62,51 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        LoginActivity.setOnClickListener(new View.OnClickListener() {
+        JoinActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mAuth = FirebaseAuth.getInstance();
 
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                if(currentUser != null){
-                    //reload();
+                Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.JoinFarm.class);
+                startActivity(intent);
+                finish();
 
-                    Toast toast = Toast.makeText(MainActivity.this, "User logged in already", Toast.LENGTH_SHORT);
-                    toast.show();
-
-                }
-                else{
-                    Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
 
             }
         });
 
 
+    }
+
+    private boolean checkUserIsInFarm(FirebaseUser currentUser) {
+
+        // get dbref for user id
+        DatabaseReference dbRef = DatabaseManager.getDatabaseRefForUserId(currentUser);
+
+        // variables
+        String stringIndicatingUserIsNotInFarm = "none";
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+                Log.d("UserTableFarmId is ", snapshot.child("UserTableFarmId").getValue().toString());
+
+                    if(farmId.equals(stringIndicatingUserIsNotInFarm))
+                    {
+                        Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.JoinFarm.class);
+                        startActivity(intent);
+                        finish();
+
+                    }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // do nothing
+            }
+        });
+        return true;
     }
 
     // Menu Icon in top left
