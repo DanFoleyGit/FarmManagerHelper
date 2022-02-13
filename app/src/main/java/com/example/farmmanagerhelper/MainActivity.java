@@ -40,10 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            //reload();
 
-            Toast toast = Toast.makeText(MainActivity.this, "User logged in already", Toast.LENGTH_SHORT);
-            toast.show();
             UserEmail.setText("Hello " + currentUser.getEmail());
 
         }
@@ -103,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // do nothing
+                Log.d("error", error.toString());
             }
         });
         return true;

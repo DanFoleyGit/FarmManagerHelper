@@ -40,7 +40,6 @@ public class RegisterAccountActivity extends AppCompatActivity {
         // UI components
         Button registerAccountButton = findViewById(R.id.btnRegisterAccount);
 
-
         registerAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,7 +91,6 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 RegisterAccountErrorMsg.setText("All fields Are Required");
                 break;
             }
-
             RegisterAccountErrorMsg.setText("");
 
             isValid = UserServices.validateEmail(registerEmail);
@@ -101,7 +99,6 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 RegisterAccountErrorMsg.setText("Email not in correct format");
                 break;
             }
-
             RegisterAccountErrorMsg.setText("");
 
             isValid = UserServices.checkPasswordLength(registerPassword);
@@ -110,9 +107,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 RegisterAccountErrorMsg.setText("Passwords must be at least 8 characters");
                 break;
             }
-
             RegisterAccountErrorMsg.setText("");
-
 
             isValid = UserServices.checkPasswords(registerPassword, registerPasswordConfirm);
             if(isValid == false)
@@ -125,7 +120,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
             if(isValid)
             {
-                // add user to firebase authentification
+                // add user to firebase authentication
                 Log.d("VALIDATION:", "success");
 
                 // create user
@@ -135,24 +130,21 @@ public class RegisterAccountActivity extends AppCompatActivity {
                         registerEmail.getText().toString(), "none");
 
 
-                addUserToFirebaseAuth(registerEmail.getText().toString(), registerPassword.getText().toString(),
+                addUserToFirebaseAuthAndDatabase(registerEmail.getText().toString(), registerPassword.getText().toString(),
                         RegisterAccountErrorMsg, user);
 
                 break;
             }
-
         }
-
     }
 
-    private void addUserToFirebaseAuth(String email, String password, TextView RegisterAccountErrorMsg, User user) {
+    private void addUserToFirebaseAuthAndDatabase(String email, String password, TextView RegisterAccountErrorMsg, User user) {
 
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task)
                     {
-
                         if (task.isSuccessful())
                         {
                             Log.d("", "createUserWithEmail:success");
@@ -164,12 +156,9 @@ public class RegisterAccountActivity extends AppCompatActivity {
                             // assign userid to user object
                             // create user
                             FirebaseUser firebaseUser = mAuth.getCurrentUser(); // user hasnt been created yet
-
                             user.userId = firebaseUser.getUid();
 
-
                             // add user to database
-
                             Toast toast = Toast.makeText(RegisterAccountActivity.this, "Creating Account", Toast.LENGTH_SHORT);
                             toast.show();
 
@@ -188,15 +177,11 @@ public class RegisterAccountActivity extends AppCompatActivity {
                             {
                             // If sign in fails, display a message to the user.
                             Log.w("", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterAccountActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
 
                             // set error message
                             RegisterAccountErrorMsg.setText("Error Creating Account");
-
                         }
                     }
                 });
     }
-
 }
