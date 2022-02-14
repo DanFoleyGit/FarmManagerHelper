@@ -96,14 +96,9 @@ public class CreateFarm extends AppCompatActivity {
 
             if(isValid)
             {
-
                 Log.d("CreateFarm validation :","passed");
 
-                // DatabaseReference dbRef = DatabaseManager.getDatabaseRefForFarmName(createFarmName.getText().toString());
-
                 DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-
-
 
                 Farm finalFarm = farm;
                 dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -113,9 +108,8 @@ public class CreateFarm extends AppCompatActivity {
                         if(!snapshot.child("farm_table").child(createFarmName.getText().toString()).exists()) {
 
                             Log.d("CreateFarm adding farm to database and user :", createFarmName.getText().toString());
-                            //call db stuff
+                            //call db manager to perform updates to farm_table and the user
                             DatabaseManager.addFarmToDatabase(finalFarm);
-                            DatabaseManager.AddFarmNameToUserAndUserToFarm(finalFarm.farmName, finalFarm.managerID);
 
                             // Go to mainActivity
                             startActivity(new Intent(CreateFarm.this, MainActivity.class));
@@ -141,26 +135,4 @@ public class CreateFarm extends AppCompatActivity {
 
     }
 
-    private boolean checkIfFarmAlreadyExist(String farmNameFromInput, Farm farm) {
-
-        Log.d("CreateFarm at checkFarmDoesNotAlreadyExist with :", farmNameFromInput);
-
-        // get dbref for the farm name from the farm table
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-
-        // get key will return null if it does not exist ////////////////////////
-        Log.d("CreateFarm dbref :", dbRef.getKey());
-
-        if(dbRef.child("farm_table").child(farm.farmName) == null)
-        {
-            Log.d("dbref is null:", farmNameFromInput);
-            return true;
-        }
-        else
-        {
-            Log.d("dbref exists:", farmNameFromInput);
-            return false;
-        }
-
-    }
 }
