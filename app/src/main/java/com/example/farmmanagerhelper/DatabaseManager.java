@@ -18,18 +18,18 @@ public class DatabaseManager {
     // other variables
     String stringIndicatingUserIsNotInFarm = "none";
 
-    public static DatabaseReference getDatabaseReference(){
+    public static DatabaseReference getDatabaseReference()
+    {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference();
 
         return dbRef;
     }
 
-    public static boolean addUserToDatabase(User user) {
-
+    public static boolean addUserToDatabase(User user)
+    {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference();
-
 
         // add user object to the table making the user ID the childnode/ primary key
         dbRef.child("users").child(user.userId).setValue(user);
@@ -102,7 +102,8 @@ public class DatabaseManager {
 
     }
 
-    public static DatabaseReference getDatabaseRefForFarmName(String farmNameFromInput) {
+    public static DatabaseReference getDatabaseRefForFarmName(String farmNameFromInput)
+    {
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference().child("farm_table").child(farmNameFromInput);

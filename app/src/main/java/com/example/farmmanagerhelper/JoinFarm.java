@@ -74,7 +74,7 @@ public class JoinFarm extends AppCompatActivity {
             isValid = (FarmService.InputsDontContainWhiteSpaces(joinFarmName.getText().toString(),joinFarmPassCode.getText().toString()));
             if(!isValid)
             {
-                Log.d("CreateFarm validation :","name or passcode has whitepsaces");
+                Log.d("CreateFarm validation :","Name or pass code has white spaces");
                 joinFarmErrorMessage.setText("Name and Passcode cant have spaces");
                 break;
             }

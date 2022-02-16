@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         // UI
         Button JoinActivity = findViewById((R.id.JoinActivity));
+        Button openTimetableActivity = findViewById(R.id.buttonOpenTimetableActivity);
         TextView UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
 
         // check if the user is logged. If they are go to the login activity and close main activity
@@ -57,6 +58,16 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+        openTimetableActivity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // open timetable activity, without closing the main activity so user can use the back
+                // button
+                startActivity(new Intent(MainActivity.this, ManagerTimetable.class));
+                // finish();
+            }
+        });
 
 
         JoinActivity.setOnClickListener(new View.OnClickListener() {
