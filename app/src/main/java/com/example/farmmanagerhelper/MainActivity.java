@@ -39,25 +39,39 @@ public class MainActivity extends AppCompatActivity {
         // check if the user is logged. If they are go to the login activity and close main activity
         mAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-
-            UserEmail.setText("Hello " + currentUser.getEmail());
-
-        }
-        // check if the user is in a farm
-        if(checkUserIsInFarm(currentUser))
+        // allow current user to be null and open login screen on new startup
+        if(mAuth.getCurrentUser() == null)
         {
-            Log.d("MainActivity", "User checked and is in farm");
-            Toast toast = Toast.makeText(MainActivity.this, "User checked", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-
-        else{
+            Log.d("MainActivity", "User reference is null");
             Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
             startActivity(intent);
             finish();
+
         }
+        else
+        {
+            FirebaseUser currentUser = mAuth.getCurrentUser();
+            if(currentUser != null){
+
+                UserEmail.setText("Hello " + currentUser.getEmail());
+
+            }
+            // check if the user is in a farm
+            if(checkUserIsInFarm(currentUser))
+            {
+                Log.d("MainActivity", "User checked and is in farm");
+                Toast toast = Toast.makeText(MainActivity.this, "User checked", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+
+            else{
+                Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+
+
 
         openTimetableActivity.setOnClickListener(new View.OnClickListener() {
             @Override

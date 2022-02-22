@@ -26,14 +26,14 @@
             android:text="TimetableTaskName"
             android:layout_width="match_parent"
             android:layout_height="25dp"
-            android:id="@+id/TextViewTimeSlotDescription" />
+            android:id="@+id/TextViewTimeSlotTaskName" />
 
         <TextView
             android:gravity="center"
             android:text="TimetableDescription"
             android:layout_width="match_parent"
             android:layout_height="25dp"
-            android:id="@+id/TextViewTimeSlotTaskName" />
+            android:id="@+id/TextViewTimeSlotDescription" />
 
     </LinearLayout>
 

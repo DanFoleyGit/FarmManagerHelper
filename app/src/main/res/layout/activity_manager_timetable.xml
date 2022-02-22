@@ -1,18 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#364CAF50"
-    tools:context=".ManagerTimetable">
+    android:layout_weight="100">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="33.3"
+
+        android:background="#364CAF50"
+        tools:context=".ManagerTimetable">
+
+
+        <TextView
+            android:id="@+id/managerTimetableStartTimeTag"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="44dp"
+            android:text="Start Time"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/ManagerTimetableSpinnerStartTime"
+            app:layout_constraintTop_toBottomOf="@+id/ManagerTimetableDateTag" />
+
+        <TextView
+            android:id="@+id/managerTimetableEndTimeTag"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="44dp"
+            android:text="EndTime"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/ManagerTimetableSpinnerEndTime"
+            app:layout_constraintTop_toBottomOf="@+id/managerTimetableStartTimeTag" />
+
+        <TextView
+            android:id="@+id/managerTimetableAssignToTag"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="44dp"
+            android:text="Assigned To"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/ManagerTimetableSpinnerUsersNames"
+            app:layout_constraintTop_toBottomOf="@+id/managerTimetableEndTimeTag" />
+
+        <Button
+            android:id="@+id/ManagerTimeTableSubmitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="244dp"
+            android:text="Submit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ManagerTimeTableDatePicker" />
+
+        <EditText
+            android:id="@+id/ManagerTimeTableDatePicker"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginEnd="16dp"
+            android:clickable="false"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/ManagerTimetableSpinnerStartTime"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="196dp"
+            android:layout_marginTop="24dp"
+            android:hint="StartTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ManagerTimeTableDatePicker" />
+
+        <Spinner
+            android:id="@+id/ManagerTimetableSpinnerEndTime"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="196dp"
+            android:layout_marginTop="24dp"
+            android:hint="StartTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ManagerTimetableSpinnerStartTime" />
+
+
+        <Spinner
+            android:id="@+id/ManagerTimetableSpinnerUsersNames"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="196dp"
+            android:layout_marginTop="24dp"
+            android:hint="StartTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ManagerTimetableSpinnerEndTime" />
+
+        <TextView
+            android:id="@+id/ManagerTimetableErrorMsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="error message"
+            android:textColor="#FF0000"
+            app:layout_constraintBottom_toTopOf="@+id/ManagerTimeTableSubmitButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/ManagerTimetableDateTag"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:layout_marginEnd="44dp"
+            android:text="Date"
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/ManagerTimeTableDatePicker"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ListView
         android:id="@+id/ManagerTimeTableListView"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="66.6"
+    />
+</LinearLayout>

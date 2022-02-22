@@ -2,12 +2,17 @@ package com.example.farmmanagerhelper;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+
 import com.example.farmmanagerhelper.models.Farm;
 import com.example.farmmanagerhelper.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class DatabaseManager {
     //Firebase
@@ -67,9 +72,27 @@ public class DatabaseManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference();
 
-
-        dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).setValue(userID);
         dbRef.child("users").child(userID).child("UserTableFarmId").setValue(farmName);
+
+        // get the users name and add it as the value for the node id
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String firstName = snapshot.child("users").child(userID).child("firstName").getValue().toString();
+                String lastName = snapshot.child("users").child(userID).child("lastName").getValue().toString();
+                String fullName = firstName + " " + lastName;
+
+                dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).setValue(fullName);
+
+                Log.d("DatabaseManager AddFarmNameToUserAndUserToFarm",fullName + " added to farm");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("DatabaseManager AddFarmNameToUserAndUserToFarm","Error adding user to farm");
+
+            }
+        });
 
     }
 
