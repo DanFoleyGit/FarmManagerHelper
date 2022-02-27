@@ -27,6 +27,7 @@ public class DatabaseManager {
     public static DatabaseReference getDatabaseReference()
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
         DatabaseReference dbRef = database.getReference();
 
         return dbRef;
@@ -116,9 +117,6 @@ public class DatabaseManager {
     // if it is and false if not
     public static DatabaseReference getDatabaseRefForUserId(FirebaseUser firebaseUser)
     {
-
-        // variable
-        String stringIndicatingUserIsNotInFarm = "none";
 
         // https://stackoverflow.com/questions/67832715/how-to-retrieve-specific-data-from-firebase-realtime-database
         FirebaseDatabase database = FirebaseDatabase.getInstance();

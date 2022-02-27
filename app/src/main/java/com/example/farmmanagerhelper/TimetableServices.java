@@ -6,10 +6,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.farmmanagerhelper.models.TimeSlot;
+import com.example.farmmanagerhelper.models.TimetableTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class TimetableServices {
@@ -133,6 +135,15 @@ public class TimetableServices {
         return Integer.parseInt(newTime);
     }
 
+    // takes the start and end time and returns how many time slot that task needs in the timetable.
+    public static int findLengthOfTask(TimetableTask task) {
+        int startTimeInt = TimetableServices.convertStringTimeInputToInt(task.getTaskStartTime());
+        int endTimeInt = TimetableServices.convertStringTimeInputToInt(task.getTaskEndTime());
+        int numberOfSlotsNeeded = (endTimeInt - startTimeInt ) / 30;
+        Log.d("StaffTimetable","number of slots needed:" + numberOfSlotsNeeded);
+        return numberOfSlotsNeeded - 1;
+    }
+
     public static boolean checkValuesAreNotNull(String date, String taskName) {
         if(TextUtils.isEmpty(date) || TextUtils.isEmpty(taskName))
         {
@@ -150,6 +161,13 @@ public class TimetableServices {
         String myFormat="dd/MM/yy";
         SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.UK);
         datePicker.setText(dateFormat.format(myCalandar.getTime()));
+    }
+
+    public static void SetDateToTodaysDate(EditText editTextDatePicker, Calendar myCalendar) {
+        String myFormat="dd/MM/yy";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.UK);
+        String todaysDate = dateFormat.format(new Date());
+        editTextDatePicker.setText(todaysDate);
     }
 
     public static boolean checkStartAndEndTimesAreChronological(int intStartTime, int intEndTime) {
@@ -184,4 +202,5 @@ public class TimetableServices {
             return true;
         }
     }
+
 }

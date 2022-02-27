@@ -38,9 +38,10 @@ public class MainActivity extends AppCompatActivity {
 
         // check if the user is logged. If they are go to the login activity and close main activity
         mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
         // allow current user to be null and open login screen on new startup
-        if(mAuth.getCurrentUser() == null)
+        if(currentUser == null)
         {
             Log.d("MainActivity", "User reference is null");
             Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
@@ -50,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else
         {
-            FirebaseUser currentUser = mAuth.getCurrentUser();
             if(currentUser != null){
 
                 UserEmail.setText("Hello " + currentUser.getEmail());
@@ -76,10 +76,11 @@ public class MainActivity extends AppCompatActivity {
         openTimetableActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // open timetable activity, without closing the main activity so user can use the back
-                // button
-                startActivity(new Intent(MainActivity.this, ManagerTimetable.class));
-                // finish();
+
+                // need to check if the user is a manager or normal staff
+
+
+                openTimetableForUserType(currentUser);
             }
         });
 
@@ -145,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
 
-            // set up as a case satement to allow extra options if needed
+            // set up as a case statement to allow extra options if needed
             case R.id.MenuLogout:
                 // sign out user
 
@@ -161,5 +162,37 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return true;
+    }
+
+    public void openTimetableForUserType(FirebaseUser currentUser) {
+        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                // get farmId from currentUser
+                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+
+                // Check if the currentUser Id matches the farms farmManager Value and open appropriate timetable interface
+                if(currentUser.getUid().equals(snapshot.child("farm_table").child(farmId).child("managerID").getValue().toString()))
+                {
+                    // open timetable activity, without closing the main activity so user can use the back
+                    startActivity(new Intent(MainActivity.this, ManagerTimetable.class));
+                }
+                else
+                {
+                    // open timetable activity, without closing the main activity so user can use the back
+                    startActivity(new Intent(MainActivity.this, StaffTimetable.class));
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }
