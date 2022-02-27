@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.farmmanagerhelper.models.Farm;
+import com.example.farmmanagerhelper.models.TimetableTask;
 import com.example.farmmanagerhelper.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -82,7 +83,9 @@ public class DatabaseManager {
                 String lastName = snapshot.child("users").child(userID).child("lastName").getValue().toString();
                 String fullName = firstName + " " + lastName;
 
-                dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).setValue(fullName);
+                //dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).setValue(fullName);
+                dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID);
+                dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).child("name").setValue(fullName);
 
                 Log.d("DatabaseManager AddFarmNameToUserAndUserToFarm",fullName + " added to farm");
             }
@@ -131,5 +134,15 @@ public class DatabaseManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference().child("farm_table").child(farmNameFromInput);
         return dbRef;
+    }
+
+    public static void AddNewTaskToUserInFarmTimeTable(String userId, String farmId, TimetableTask task) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference();
+
+        // add new task to the user in usersInFarm giving the unique key as the identifier
+        dbRef.child("farm_table").child(farmId).child("usersInFarm").child(userId).child("timetable").child(task.getTaskID()).setValue(task);
+        Log.d("Database write: ","New task added to " +userId+ " from farm : "+ farmId );
+
     }
 }

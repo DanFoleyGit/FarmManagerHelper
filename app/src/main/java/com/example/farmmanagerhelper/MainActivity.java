@@ -114,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 String farmId = snapshot.child("UserTableFarmId").getValue().toString();
                 Log.d("UserTableFarmId is ", snapshot.child("UserTableFarmId").getValue().toString());
 
+
                     if(farmId.equals(stringIndicatingUserIsNotInFarm))
                     {
                         Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.JoinFarm.class);

@@ -2,10 +2,15 @@ package com.example.farmmanagerhelper;
 
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.example.farmmanagerhelper.models.TimeSlot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class TimetableServices {
 
@@ -128,8 +133,8 @@ public class TimetableServices {
         return Integer.parseInt(newTime);
     }
 
-    public static boolean checkValuesAreNotNull(String date) {
-        if(TextUtils.isEmpty(date))
+    public static boolean checkValuesAreNotNull(String date, String taskName) {
+        if(TextUtils.isEmpty(date) || TextUtils.isEmpty(taskName))
         {
             return false;
         }
@@ -140,8 +145,37 @@ public class TimetableServices {
 
     }
 
+    // updates the EditText after the user has selected the date they want.
+    public static void updateLabel(EditText datePicker, Calendar myCalandar) {
+        String myFormat="dd/MM/yy";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.UK);
+        datePicker.setText(dateFormat.format(myCalandar.getTime()));
+    }
+
     public static boolean checkStartAndEndTimesAreChronological(int intStartTime, int intEndTime) {
         if(intStartTime > intEndTime)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public static boolean checkUserIsSelected(Spinner spinnerUsersNames) {
+        if(    spinnerUsersNames.getSelectedItem() == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public static boolean checkTimesAreNotTheSame(int intStartTime, int intEndTime) {
+        if(intStartTime == intEndTime)
         {
             return false;
         }
