@@ -19,7 +19,7 @@ public class TimetableServices {
     public static ArrayList<TimeSlot> getTimeSlotTemplate()
     {
 
-        TimeSlot t0400 = new TimeSlot("04:00","name","description",null,null, false, null);
+        TimeSlot t0400 = new TimeSlot("04:00",null,null,null,null, false, null);
         TimeSlot t0430 = new TimeSlot("04:30",null,null,null,null, false, null);
         TimeSlot t0500 = new TimeSlot("05:00",null,null,null,null, false, null);
         TimeSlot t0530 = new TimeSlot("05:30",null,null,null,null, false, null);
@@ -136,12 +136,29 @@ public class TimetableServices {
     }
 
     // takes the start and end time and returns how many time slot that task needs in the timetable.
+    // the function must convert half hours as 0830 to be 0850 so that it can evenly divide by 50 to get half.
+    // as the functions only purpose is to return the number of slots, it doesnt need to know the exact times.
+
     public static int findLengthOfTask(TimetableTask task) {
         int startTimeInt = TimetableServices.convertStringTimeInputToInt(task.getTaskStartTime());
         int endTimeInt = TimetableServices.convertStringTimeInputToInt(task.getTaskEndTime());
-        int numberOfSlotsNeeded = (endTimeInt - startTimeInt ) / 30;
+
+        // if the time is given as a half hour, add 20 to it to allow it to be divided by 50
+        if((endTimeInt % 50) != 0)
+        {
+            endTimeInt = endTimeInt +20;
+        }
+
+        if((startTimeInt % 50) != 0)
+        {
+            startTimeInt = startTimeInt +20;
+        }
+
+        int numberOfSlotsNeeded = (endTimeInt - startTimeInt ) / 50;
+        Log.d("StaffTimetable","endtimeInt: " + endTimeInt + " , startTimeInt: " + startTimeInt);
+
         Log.d("StaffTimetable","number of slots needed:" + numberOfSlotsNeeded);
-        return numberOfSlotsNeeded - 1;
+        return numberOfSlotsNeeded;
     }
 
     public static boolean checkValuesAreNotNull(String date, String taskName) {

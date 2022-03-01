@@ -25,6 +25,12 @@ public class TimetableTask {
         this.taskColor = taskColor;
     }
 
+    // no argument constructor
+    public TimetableTask()
+    {
+
+    }
+
     public String getTaskID() {
         return taskID;
     }

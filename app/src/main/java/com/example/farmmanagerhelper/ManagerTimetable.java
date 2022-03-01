@@ -55,6 +55,7 @@ public class ManagerTimetable extends AppCompatActivity {
         setContentView(R.layout.activity_manager_timetable);
         // UI elements
         Button buttonSubmit = findViewById(R.id.ManagerTimeTableSubmitButton);
+        Button buttonViewStaff = findViewById(R.id.managerTimeTableViewStaffButton);
         Spinner spinnerStartTime = findViewById(R.id.ManagerTimetableSpinnerStartTime);
         Spinner spinnerEndTime = findViewById(R.id.ManagerTimetableSpinnerEndTime);
         Spinner spinnerUsersNames = findViewById(R.id.ManagerTimetableSpinnerUsersNames);
@@ -107,6 +108,13 @@ public class ManagerTimetable extends AppCompatActivity {
 
         // get users in an array and add it to the spinner
         getUsersNamesFromFarmTableForManagerTimeTable(spinnerUsersNames);
+
+        buttonViewStaff.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
 
         // onclick method for submitting the form
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
@@ -173,6 +181,13 @@ public class ManagerTimetable extends AppCompatActivity {
                                 null, startTime, endTime, false, null);
 
                         writeTaskTaskToUser(task);
+
+                        // reset task name
+                        editTextTaskName.setText("");
+                        // set start time to the end time of previous task
+                        spinnerStartTime.setSelection(spinnerEndTime.getSelectedItemPosition());
+                        // set end time to next time slot
+                        spinnerEndTime.setSelection(spinnerEndTime.getSelectedItemPosition()+1);
                         break;
                     }
                 }
@@ -216,6 +231,8 @@ public class ManagerTimetable extends AppCompatActivity {
 
                         // add task to the users timetable
                         DatabaseManager.AddNewTaskToUserInFarmTimeTable(userId,farmId,task);
+                        Toast toast = Toast.makeText(ManagerTimetable.this, "Task added to " + task.getTaskAssignedTo(), Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 }
             }
