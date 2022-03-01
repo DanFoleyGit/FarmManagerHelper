@@ -70,10 +70,10 @@
 
         <Button
             android:id="@+id/ManagerTimeTableSubmitButton"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="44dp"
-            android:text="Submit"
+            android:text="Add New Task"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
@@ -81,10 +81,10 @@
 
         <Button
             android:id="@+id/managerTimeTableViewStaffButton"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="112dp"
-            android:text="View Staff"
+            android:text="View Staff Timetables"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.495"
             app:layout_constraintStart_toStartOf="parent"
@@ -129,7 +129,7 @@
             android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="196dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:hint="StartTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ManagerTimetableSpinnerEndTime" />
@@ -139,7 +139,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="error message"
             android:textColor="#FF0000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

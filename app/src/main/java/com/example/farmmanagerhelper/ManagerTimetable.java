@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -62,18 +64,19 @@ public class ManagerTimetable extends AppCompatActivity {
         EditText editTextDatePicker = findViewById(R.id.ManagerTimeTableDatePicker);
         EditText editTextTaskName = findViewById(R.id.editTextManagerTimetableTaskName);
         TextView errorMessage = findViewById(R.id.ManagerTimetableErrorMsg);
+        Context context = this;
 
 
         // set up the listView
-        ListView listView = (ListView) findViewById(R.id.ManagerTimeTableListView);
+        //ListView listView = (ListView) findViewById(R.id.ManagerTimeTableListView);
 
         // get template with times
-        ArrayList<TimeSlot> timetable = TimetableServices.getTimeSlotTemplate();
+       // ArrayList<TimeSlot> timetable = TimetableServices.getTimeSlotTemplate();
 
 
         // create custom list timetableAdapter
-        TimetableListAdapter timetableAdapter = new TimetableListAdapter(this, R.layout.timetable_time_slot, timetable);
-        listView.setAdapter(timetableAdapter);
+//        TimetableListAdapter timetableAdapter = new TimetableListAdapter(this, R.layout.timetable_time_slot, timetable);
+//        listView.setAdapter(timetableAdapter);
 
         // Setting the edit text to today's date
         TimetableServices.SetDateToTodaysDate(editTextDatePicker, myCalendar);
@@ -107,12 +110,14 @@ public class ManagerTimetable extends AppCompatActivity {
         spinnerEndTime.setAdapter(spinnerAdapter);
 
         // get users in an array and add it to the spinner
-        getUsersNamesFromFarmTableForManagerTimeTable(spinnerUsersNames);
+        TimetableServices.getUsersNamesFromFarmTableForManagerTimeTable(spinnerUsersNames,context);
 
+        // Button to Open the view staff timetable view.
         buttonViewStaff.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    Intent intent = new Intent(ManagerTimetable.this, com.example.farmmanagerhelper.ManagerViewingStaffTimetable.class);
+                    startActivity(intent);
                 }
             });
 
@@ -235,48 +240,6 @@ public class ManagerTimetable extends AppCompatActivity {
                         toast.show();
                     }
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("error", error.toString());
-            }
-        });
-    }
-
-    // Gets the managers userId, then gets the list of users from the farm and adds their names into
-    // a spinner list that is displayed to the manager
-    private void getUsersNamesFromFarmTableForManagerTimeTable(Spinner spinnerUsersNames) {
-
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("ManagerTimetable ", "userId is " + currentUser.getUid());
-
-        // get dbref for user id
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String farmId = "";
-                String name = "";
-                List<String> usersByName = new ArrayList<String>();
-
-                // get the farm id
-                farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
-                Log.d("ManagerTimetable ", "FarmId is " + farmId);
-
-                // get the users names that is stored in the farm table
-                for(DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm").getChildren())
-                {
-                    // add the users to the list
-                    name = ds.child("name").getValue().toString();
-                    usersByName.add(name);
-                }
-
-                // create a new adapter which takes a list of users and takes usersByName to display
-                ArrayAdapter<String> spinnerUsersAdapter = new ArrayAdapter<String>(ManagerTimetable.this, android.R.layout.simple_spinner_dropdown_item, usersByName);
-                spinnerUsersNames.setAdapter(spinnerUsersAdapter);
             }
 
             @Override

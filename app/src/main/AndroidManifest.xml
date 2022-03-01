@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".StaffTimetable"/>
-        <activity android:name=".ManagerTimetable"/>
+        <activity android:name=".ManagerViewingStaffTimetable"></activity>
+        <activity android:name=".StaffTimetable" />
+        <activity android:name=".ManagerTimetable" />
         <activity android:name=".JoinFarm" />
         <activity android:name=".CreateFarm" />
         <activity android:name=".RegisterAccountActivity" />
