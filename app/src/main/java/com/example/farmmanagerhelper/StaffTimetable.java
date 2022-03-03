@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -91,6 +92,7 @@ public class StaffTimetable extends AppCompatActivity {
         });
 
         // Adjust the date forward and call update the timetable
+        //
         buttonForwardDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,110 +136,120 @@ public class StaffTimetable extends AppCompatActivity {
             }
         });
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                Toast.makeText(context, "Time is: " + timetable.get(i).getTimeSlotTime(), Toast.LENGTH_SHORT).show();
+//                Log.d("ManagerViewingStaffTimetable", "Time is: " + timetable.get(i).getTimeSlotTime());
+                TimetableServices.getDatesTasksAndUpdateTimeTable(editTextDatePicker.getText().toString(), listView, context);
+
+            }
+        });
+
         // update the timetable with todays date that is set in the editText via onCreate.
         //
         TimetableServices.getDatesTasksAndUpdateTimeTable(editTextDatePicker.getText().toString(), listView, context);
 
     }
-
-    private void getDatesTasksAndUpdateTimeTable(String date, ListView listView) {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        // get dbref for user id
-        //
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-        ArrayList<TimeSlot> timetable = TimetableServices.getTimeSlotTemplate();
-
-
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // get the farm id
-                //
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
-                int count = 0;
-
-                // get user id's from the usersInFarmTable
-                //
-                if(snapshot.child("farm_table").child(farmId).child("usersInFarm").child(currentUser.getUid()).child("timetable").hasChildren())
-                {
-                    for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm")
-                            .child(currentUser.getUid()).child("timetable").getChildren()) {
-
-                        // add the users to the list
-                        //
-                        if(date.equals(ds.child("taskDate").getValue().toString()))
-                        {
-                            count++;
-                            Log.d("Staff Timetable ", "Count is : " + count);
-
-                            //add task to list
-                            //
-                            TimetableTask task = ds.getValue(TimetableTask.class);
-                            Log.d("Staff Timetable ", "TimeTableTask " + task.getTaskName() + "starts at " + task.getTaskStartTime());
-
-                            // This algorithm loops through the Timetable containing a list of time slots in 30 minute
-                            // increments. If the start time of a task matches the timeslot as it loops, it will set that
-                            // slots task name to its task name. It will then call a function findLegnthOfTask() which takes
-                            // the task start time and end time, subtracts the start time from the end time and divides that
-                            // by 30 to find out how many slots it is on for. It will then loop X amount of time and set
-                            // the timeslots to that task for the length of that task.
-                            //
-                            for(int i =0; i<timetable.size(); i++)
-                            {
-                                TimeSlot currentSlot = timetable.get(i);
-                                if(currentSlot.getTimeSlotTime().equals(task.getTaskStartTime()))
-                                {
-                                    currentSlot.setTimeSlotName(task.getTaskName());
-
-                                    int numberOfSlotsNeededForTask = TimetableServices.findLengthOfTask(task);
-
-                                    for(int j = i; j < i + numberOfSlotsNeededForTask; j++)
-                                    {
-                                        TimeSlot nextSlotsForTaskDuration = timetable.get(j);
-                                        nextSlotsForTaskDuration.setTimeSlotName(task.getTaskName());
-
-                                    }
-                                }
-                            }
-                            // create custom list timetableAdapter
-                            //
-                            TimetableListAdapter timetableAdapter = new TimetableListAdapter(StaffTimetable.this, R.layout.timetable_time_slot, timetable);
-                            listView.setAdapter(timetableAdapter);
-
-                        }
-
-                    }
-
-                    // If there are no tasks for the date, reset the timetable to be blank
-                    //
-                    if(count<1)
-                    {
-                        Toast.makeText(StaffTimetable.this, "No Tasks assigned for " + date, Toast.LENGTH_SHORT).show();
-                        Log.d("Staff Timetable ", "No Tasks assigned for " + date);
-
-                        ArrayList<TimeSlot> blankTimetable = TimetableServices.getTimeSlotTemplate();
-                        TimetableListAdapter timetableAdapter = new TimetableListAdapter(StaffTimetable.this, R.layout.timetable_time_slot, blankTimetable);
-                        listView.setAdapter(timetableAdapter);
-                    }
-
-                }
-                else
-                {
-                    // if there are no tasks found for that date, give user the feedback
-                    //Toast.makeText(StaffTimetable.this, "No Tasks assigned for " + date, Toast.LENGTH_SHORT).show();
-                    Log.d("Staff Timetable ", "TimeTableTask user Does not have a timetable.");
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("error", error.toString());
-            }
-        });
-    }
+//
+//    private void getDatesTasksAndUpdateTimeTable(String date, ListView listView) {
+//        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//
+//        // get dbref for user id
+//        //
+//        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+//        ArrayList<TimeSlot> timetable = TimetableServices.getTimeSlotTemplate();
+//
+//
+//        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                // get the farm id
+//                //
+//                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+//                int count = 0;
+//
+//                // get user id's from the usersInFarmTable
+//                //
+//                if(snapshot.child("farm_table").child(farmId).child("usersInFarm").child(currentUser.getUid()).child("timetable").hasChildren())
+//                {
+//                    for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm")
+//                            .child(currentUser.getUid()).child("timetable").getChildren()) {
+//
+//                        // add the users to the list
+//                        //
+//                        if(date.equals(ds.child("taskDate").getValue().toString()))
+//                        {
+//                            count++;
+//                            Log.d("Staff Timetable ", "Count is : " + count);
+//
+//                            //add task to list
+//                            //
+//                            TimetableTask task = ds.getValue(TimetableTask.class);
+//                            Log.d("Staff Timetable ", "TimeTableTask " + task.getTaskName() + "starts at " + task.getTaskStartTime());
+//
+//                            // This algorithm loops through the Timetable containing a list of time slots in 30 minute
+//                            // increments. If the start time of a task matches the timeslot as it loops, it will set that
+//                            // slots task name to its task name. It will then call a function findLegnthOfTask() which takes
+//                            // the task start time and end time, subtracts the start time from the end time and divides that
+//                            // by 30 to find out how many slots it is on for. It will then loop X amount of time and set
+//                            // the timeslots to that task for the length of that task.
+//                            //
+//                            for(int i =0; i<timetable.size(); i++)
+//                            {
+//                                TimeSlot currentSlot = timetable.get(i);
+//                                if(currentSlot.getTimeSlotTime().equals(task.getTaskStartTime()))
+//                                {
+//                                    currentSlot.setTimeSlotName(task.getTaskName());
+//
+//                                    int numberOfSlotsNeededForTask = TimetableServices.findLengthOfTask(task);
+//
+//                                    for(int j = i; j < i + numberOfSlotsNeededForTask; j++)
+//                                    {
+//                                        TimeSlot nextSlotsForTaskDuration = timetable.get(j);
+//                                        nextSlotsForTaskDuration.setTimeSlotName(task.getTaskName());
+//
+//                                    }
+//                                }
+//                            }
+//                            // create custom list timetableAdapter
+//                            //
+//                            TimetableListAdapter timetableAdapter = new TimetableListAdapter(StaffTimetable.this, R.layout.timetable_time_slot, timetable);
+//                            listView.setAdapter(timetableAdapter);
+//
+//                        }
+//
+//                    }
+//
+//                    // If there are no tasks for the date, reset the timetable to be blank
+//                    //
+//                    if(count<1)
+//                    {
+//                        Toast.makeText(StaffTimetable.this, "No Tasks assigned for " + date, Toast.LENGTH_SHORT).show();
+//                        Log.d("Staff Timetable ", "No Tasks assigned for " + date);
+//
+//                        ArrayList<TimeSlot> blankTimetable = TimetableServices.getTimeSlotTemplate();
+//                        TimetableListAdapter timetableAdapter = new TimetableListAdapter(StaffTimetable.this, R.layout.timetable_time_slot, blankTimetable);
+//                        listView.setAdapter(timetableAdapter);
+//                    }
+//
+//                }
+//                else
+//                {
+//                    // if there are no tasks found for that date, give user the feedback
+//                    //Toast.makeText(StaffTimetable.this, "No Tasks assigned for " + date, Toast.LENGTH_SHORT).show();
+//                    Log.d("Staff Timetable ", "TimeTableTask user Does not have a timetable.");
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.d("error", error.toString());
+//            }
+//        });
+//    }
 
 
 }

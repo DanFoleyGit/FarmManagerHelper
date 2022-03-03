@@ -32,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         // UI
-        Button JoinActivity = findViewById((R.id.JoinActivity));
         Button openTimetableActivity = findViewById(R.id.buttonOpenTimetableActivity);
         TextView UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
 
@@ -81,20 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
 
                 openTimetableForUserType(currentUser);
-            }
-        });
-
-
-        JoinActivity.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.JoinFarm.class);
-                startActivity(intent);
-                finish();
-
-
             }
         });
 

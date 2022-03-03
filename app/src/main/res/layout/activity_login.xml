@@ -57,12 +57,12 @@
         android:id="@+id/EditTextLoginPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="56dp"
         android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintBottom_toTopOf="@+id/btnLoginUser"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,11 +13,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.farmmanagerhelper.models.TimeSlot;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.function.ToDoubleBiFunction;
 
 public class ManagerViewingStaffTimetable extends AppCompatActivity {
 
@@ -95,6 +98,20 @@ public class ManagerViewingStaffTimetable extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+//  TODO
+        // Using an on ItemClick Listener can allow managers to edit and set single hour tasks
+        //
+        // Get the time, create pop up window to add endtime and name using selected as the start
+        // time
+        // https://stackoverflow.com/questions/5944987/how-to-create-a-popup-window-popupwindow-in-android
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(context, "Time is: " + timetable.get(i).getTimeSlotTime(), Toast.LENGTH_SHORT).show();
+                Log.d("ManagerViewingStaffTimetable", "Time is: " + timetable.get(i).getTimeSlotTime());
 
             }
         });

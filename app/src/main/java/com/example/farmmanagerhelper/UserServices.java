@@ -30,9 +30,6 @@ public class UserServices {
             return false;
         }
 
-        // TODO
-        // add Regex to check if the account has upper and lowercase and a number
-
         return true;
     }
 

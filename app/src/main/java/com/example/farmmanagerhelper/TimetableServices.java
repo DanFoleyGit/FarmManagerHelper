@@ -3,6 +3,8 @@ package com.example.farmmanagerhelper;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -140,12 +142,7 @@ public class TimetableServices {
     // takes a time in 04:00 format and returns it as an Integer 0400
     //
     public static int convertStringTimeInputToInt(String time) {
-        String test = time.substring(0, 2);
-        String test2 = time.substring(4, 5);
         String newTime = time.substring(0, 2) + time.substring(3,5);
-        Log.d("test", test);
-        Log.d("test2", test2);
-        Log.d("convertStringTimeInputToInt", newTime);
         return Integer.parseInt(newTime);
     }
 
@@ -170,9 +167,7 @@ public class TimetableServices {
         }
 
         int numberOfSlotsNeeded = (endTimeInt - startTimeInt ) / 50;
-        Log.d("StaffTimetable","endtimeInt: " + endTimeInt + " , startTimeInt: " + startTimeInt);
 
-        Log.d("StaffTimetable","number of slots needed:" + numberOfSlotsNeeded);
         return numberOfSlotsNeeded;
     }
 
@@ -188,7 +183,41 @@ public class TimetableServices {
 
     }
 
+    public static boolean checkStartAndEndTimesAreChronological(int intStartTime, int intEndTime) {
+        if(intStartTime > intEndTime)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public static boolean checkUserIsSelected(Spinner spinnerUsersNames) {
+        if(    spinnerUsersNames.getSelectedItem() == null)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    public static boolean checkTimesAreNotTheSame(int intStartTime, int intEndTime) {
+        if(intStartTime == intEndTime)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
     // updates the EditText after the user has selected the date they want.
+    //
     public static void updateLabel(EditText datePicker, Calendar myCalandar) {
         String myFormat="dd/MM/yy";
         SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.UK);
@@ -206,12 +235,12 @@ public class TimetableServices {
     // Gets the managers userId, then gets the list of users from the farm and adds their names into
     // a spinner list that is displayed to the manager.
     // It takes the spinner and the context to which it needs to assign the values to.
+    //
     public static void getUsersNamesFromFarmTableForManagerTimeTable(Spinner spinnerUsersNames, Context context) {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d("ManagerTimetable ", "userId is " + currentUser.getUid());
-
 
         DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
 
@@ -339,6 +368,7 @@ public class TimetableServices {
                     Log.d("Staff Timetable ", "TimeTableTask user Does not have a timetable.");
 
                 }
+
             }
 
             @Override
@@ -371,6 +401,7 @@ public class TimetableServices {
                 //
                 String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
                 int count = 0;
+
                 // Get the users ID from the name provided
                 //
                 for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm").getChildren()) {
@@ -446,37 +477,52 @@ public class TimetableServices {
         });
     }
 
-    public static boolean checkStartAndEndTimesAreChronological(int intStartTime, int intEndTime) {
-        if(intStartTime > intEndTime)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
+    // find the user in the farm, and set the task to their timetable.
+    // First need to get a list of all the user id's in the farm then check which user
+    // has the matching name value. once a match is found, then write the task to that user.
+    public static void writeTaskTaskToUser(TimetableTask task, Context context) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
 
-    public static boolean checkUserIsSelected(Spinner spinnerUsersNames) {
-        if(    spinnerUsersNames.getSelectedItem() == null)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // get the farm id
+                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+                String keyFromPush = "";
+                String userId ="";
 
-    public static boolean checkTimesAreNotTheSame(int intStartTime, int intEndTime) {
-        if(intStartTime == intEndTime)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
-    }
+                Log.d("ManagerTimetable ", "Adding timetable to user called " + task.getTaskAssignedTo());
 
+                // get user id's from the usersInFarmTable
+                //
+                for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm").getChildren()) {
+
+                    userId = ds.getKey().toString();
+
+                    if(task.getTaskAssignedTo().equals(ds.child("name").getValue().toString()))
+                    {
+                        Log.d("ManagerTimetable", "userid:" + userId + ", farmId: "+farmId);
+
+                        // get the unique and add it to task
+                        //
+                        keyFromPush = dbRef.child("farm_table").child(farmId).child("usersInFarm").child(userId).push().getKey();
+                        task.setTaskID(keyFromPush);
+
+                        // add task to the users timetable
+                        //
+                        DatabaseManager.AddNewTaskToUserInFarmTimeTable(userId,farmId,task);
+                        Toast toast = Toast.makeText(context, "Task added to " + task.getTaskAssignedTo(), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
 }

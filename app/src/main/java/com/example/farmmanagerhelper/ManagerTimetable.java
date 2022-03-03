@@ -50,6 +50,7 @@ public class ManagerTimetable extends AppCompatActivity {
 
     final Calendar myCalendar = Calendar.getInstance();
     private static final String TAG = "ManagerTimetable";
+    Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +67,6 @@ public class ManagerTimetable extends AppCompatActivity {
         TextView errorMessage = findViewById(R.id.ManagerTimetableErrorMsg);
         Context context = this;
 
-
-        // set up the listView
-        //ListView listView = (ListView) findViewById(R.id.ManagerTimeTableListView);
-
-        // get template with times
-       // ArrayList<TimeSlot> timetable = TimetableServices.getTimeSlotTemplate();
-
-
-        // create custom list timetableAdapter
-//        TimetableListAdapter timetableAdapter = new TimetableListAdapter(this, R.layout.timetable_time_slot, timetable);
-//        listView.setAdapter(timetableAdapter);
 
         // Setting the edit text to today's date
         TimetableServices.SetDateToTodaysDate(editTextDatePicker, myCalendar);
@@ -185,7 +175,7 @@ public class ManagerTimetable extends AppCompatActivity {
                                 spinnerUsersNames.getSelectedItem().toString(), date,
                                 null, startTime, endTime, false, null);
 
-                        writeTaskTaskToUser(task);
+                        TimetableServices.writeTaskTaskToUser(task, context);
 
                         // reset task name
                         editTextTaskName.setText("");
@@ -199,56 +189,6 @@ public class ManagerTimetable extends AppCompatActivity {
             }
         });
     }
-
-    // find the user in the farm, and set the task to their timetable.
-    // First need to get a list of all the user id's in the farm then check which user
-    // has the matching name value. once a match is found, then write the task to that user.
-    private void writeTaskTaskToUser(TimetableTask task) {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        // get dbref for user id
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // get the farm id
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
-                String keyFromPush = "";
-                String userId ="";
-
-                Log.d("ManagerTimetable ", "Adding timetable to user called " + task.getTaskAssignedTo());
-
-                // get user id's from the usersInFarmTable
-                for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm").getChildren()) {
-                    // add the users to the list
-                     userId= ds.getKey().toString();
-                    //usersByUserId.add(userId);
-
-                    if(task.getTaskAssignedTo().equals(ds.child("name").getValue().toString()))
-                    {
-                        Log.d("ManagerTimetable", "userid:" + userId + ", farmId: "+farmId);
-
-                        // get the unique and add it to task
-                        keyFromPush = dbRef.child("farm_table").child(farmId).child("usersInFarm").child(userId).push().getKey();
-                        task.setTaskID(keyFromPush);
-
-                        // add task to the users timetable
-                        DatabaseManager.AddNewTaskToUserInFarmTimeTable(userId,farmId,task);
-                        Toast toast = Toast.makeText(ManagerTimetable.this, "Task added to " + task.getTaskAssignedTo(), Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("error", error.toString());
-            }
-        });
-    }
-
 
 
 }
