@@ -44,6 +44,9 @@
         <item>23:30</item>
         <item>00:00</item>
     </string-array>
+    <string-array name="blank_array">
+        <item> </item>
+    </string-array>
     <string name="title_activity_staff_timetable">StaffTimetable</string>
     <!--
     This string is used for square devices and overridden by hello_world in

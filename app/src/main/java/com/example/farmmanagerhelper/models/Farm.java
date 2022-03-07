@@ -10,10 +10,9 @@ public class Farm {
     public String orderBoardID;
     public String timeTableID;
     public String usersInFarm;
+    public String customers;
 
-    public Farm(String farmName, String farmPasscode, String farmID, String managerID,
-                    String orderBoardID, String timeTableID, String usersInFarm)
-    {
+    public Farm(String farmName, String farmPasscode, String farmID, String managerID, String orderBoardID, String timeTableID, String usersInFarm, String customers) {
         this.farmName = farmName;
         this.farmPasscode = farmPasscode;
         this.farmID = farmID;
@@ -21,5 +20,7 @@ public class Farm {
         this.orderBoardID = orderBoardID;
         this.timeTableID = timeTableID;
         this.usersInFarm = usersInFarm;
+        this.customers = customers;
     }
+
 }

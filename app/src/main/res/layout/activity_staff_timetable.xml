@@ -12,7 +12,6 @@ android:layout_weight="100">
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_weight="80"
-
     android:background="#364CAF50"
     tools:context=".ManagerTimetable"
     tools:layout_editor_absoluteX="0dp"

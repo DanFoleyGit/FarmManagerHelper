@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         // UI
         Button openTimetableActivity = findViewById(R.id.buttonOpenTimetableActivity);
+        Button openOrdersBoard = findViewById(R.id.buttonOpenOrdersActivity);
         TextView UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
 
         // check if the user is logged. If they are go to the login activity and close main activity
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        // Listeners for buttons on home screen
+        //
         openTimetableActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,7 +86,48 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        openOrdersBoard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+                openOrdersBoardForUserType(currentUser);
+            }
+        });
 
+
+
+    }
+
+    private void openOrdersBoardForUserType(FirebaseUser currentUser) {
+        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                // get farmId from currentUser
+                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+
+                // Check if the currentUser Id matches the farms farmManager Value and open appropriate timetable interface
+                if(currentUser.getUid().equals(snapshot.child("farm_table").child(farmId).child("managerID").getValue().toString()))
+                {
+                    // open timetable activity, without closing the main activity so user can use the back
+                    startActivity(new Intent(MainActivity.this, OrdersBoard.class));
+                }
+                else
+                {
+                    // open timetable activity, without closing the main activity so user can use the back
+                    startActivity(new Intent(MainActivity.this, OrdersBoard.class));
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private boolean checkUserIsInFarm(FirebaseUser currentUser) {

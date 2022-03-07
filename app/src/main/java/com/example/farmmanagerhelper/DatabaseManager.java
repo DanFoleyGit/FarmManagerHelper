@@ -4,7 +4,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Farm;
+import com.example.farmmanagerhelper.models.Product;
 import com.example.farmmanagerhelper.models.TimetableTask;
 import com.example.farmmanagerhelper.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -142,5 +144,25 @@ public class DatabaseManager {
         dbRef.child("farm_table").child(farmId).child("usersInFarm").child(userId).child("timetable").child(task.getTaskID()).setValue(task);
         Log.d("Database write: ","New task added to " +userId+ " from farm : "+ farmId );
 
+    }
+
+    public static void addNewCustomerToFarmTable(Customer customer, String farmId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference();
+
+        dbRef.child("farm_table").child(farmId).child("customers").child(customer.getCustomerName()).setValue(customer);
+
+        Log.d("Database write: ","New customer " + customer.getCustomerName()+ " from farm : "+ farmId );
+
+    }
+
+    public static void addNewProductToCustomerTable(Product product, String farmId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference();
+
+        dbRef.child("farm_table").child(farmId).child("customers").child(product.getCustomerItBelongsTo())
+                .child(product.getProductName()).setValue(product);
+
+        Log.d("Database write: ","New customer " + product.getProductName()+ " from farm : "+ farmId );
     }
 }
