@@ -2,6 +2,7 @@ package com.example.farmmanagerhelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -15,9 +16,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.farmmanagerhelper.models.Customer;
+import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.Product;
 
 import java.util.Calendar;
@@ -35,7 +36,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         EditText formEditTextDatePicker = findViewById(R.id.EditTextManagerOrderBoardSettingsDatePicker);
         Spinner formSpinnerCustomers = findViewById(R.id.spinnerManagerOrderBoardSettingsCustomer);
         Spinner formSpinnerProducts = findViewById(R.id.SpinnerManagerOrderBoardSettingsProduct);
-        EditText formEditProductQuantity = findViewById(R.id.editTextProductQuantity);
+        EditText formEditTextProductQuantity = findViewById(R.id.editTextProductQuantity);
         Button buttonAddNewOrder =  findViewById(R.id.buttonManagerOrderSettingsAddNewOrder);
         Button buttonAddNewCustomer = findViewById(R.id.buttonManagerOrderSettingsAddNewCustomerWindow);
         Button buttonAddNewProduct = findViewById(R.id.buttonManagerOrderSettingsAddNewProduct);
@@ -55,8 +56,6 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         EditText EditTextAddNewProductName = findViewById(R.id.EditTextNewProductName);
         Button buttonManagerOrderSettingsAddNewProductToDatabase = findViewById(R.id.buttonManagerOrderSettingsAddNewProductToDatabase);
         TextView textViewAddProductErrorMsg = findViewById(R.id.managerOrderBoardAddProductErrorMsg);
-
-
 
         // set up the dialog box to give dates in dd/MM/yy
         //
@@ -89,6 +88,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                 R.array.blank_array, android.R.layout.simple_spinner_item);
 
         // set the spinner to drop down and add the list of times to it
+        //
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         formSpinnerCustomers.setAdapter(spinnerAdapter);
         formSpinnerProducts.setAdapter(spinnerAdapter);
@@ -128,9 +128,9 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                     }
                     formErrorMsg.setText("");
 
-                    isValid = GeneralServices.checkEditTextIsNotNull(formEditProductQuantity.getText().toString());
+                    isValid = GeneralServices.checkEditTextIsNotNull(formEditTextProductQuantity.getText().toString());
                     if (!isValid) {
-                        Log.d("ManagerOrderBoardSettings validation :", "No products selected");
+                        Log.d("ManagerOrderBoardSettings validation :", "No quantity selected");
                         formErrorMsg.setText("Enter a quantity");
                         break;
                     }
@@ -138,12 +138,16 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
 
                     if(isValid)
                     {
-                        Toast.makeText(ManagerOrderBoardSettings.this, "Adding Customer", Toast.LENGTH_SHORT).show();
+                        Order order = new Order(null, formEditTextDatePicker.getText().toString(),
+                                formSpinnerCustomers.getSelectedItem().toString(), formSpinnerProducts.getSelectedItem().toString(),
+                                formEditTextProductQuantity.getText().toString(), false);
 
+                        OrdersBoardServices.AddOrder(order,context);
                         // reset the quantity value and product spinner
                         //
-                        formEditProductQuantity.setText("");
+                        formEditTextProductQuantity.setText("");
                         formSpinnerProducts.setSelection(0);
+                        break;
                     }
 
                 }
@@ -157,18 +161,18 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         buttonAddNewCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ManagerOrderBoardSettings.this, "Moved forward", Toast.LENGTH_SHORT).show();
-
                 // disable components for adding item
+                //
                 buttonAddNewOrder.setVisibility(View.GONE);
                 buttonAddNewCustomer.setVisibility((View.GONE));
                 buttonAddNewProduct.setVisibility((View.GONE));
                 formEditTextDatePicker.setEnabled(false);
                 formSpinnerCustomers.setEnabled(false);
                 formSpinnerProducts.setEnabled(false);
-                formEditProductQuantity.setEnabled(false);
-                //enable components for
+                formEditTextProductQuantity.setEnabled(false);
 
+                //enable components for
+                //
                 viewAddNewCustomerDialog.setVisibility(View.VISIBLE);
                 viewAddNewCustomerDialog.setElevation(10);
                 EditTextAddNewCustomerName.setVisibility(View.VISIBLE);
@@ -180,10 +184,6 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         imageButtonCloseNewCustomerWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(ManagerOrderBoardSettings.this, "Hiding add customer", Toast.LENGTH_SHORT).show();
-
-
                 //enable components for adding new customer
                 //
                 viewAddNewCustomerDialog.setVisibility(View.GONE);
@@ -199,7 +199,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                 formEditTextDatePicker.setEnabled(true);
                 formSpinnerCustomers.setEnabled(true);
                 formSpinnerProducts.setEnabled(true);
-                formEditProductQuantity.setEnabled(true);
+                formEditTextProductQuantity.setEnabled(true);
 
                 // reset customer name field
                 EditTextAddNewCustomerName.setText("");
@@ -211,10 +211,10 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
             public void onClick(View view) {
 
                 Customer customer = null;
-
                 boolean isValid = true;
 
                 Log.d("ManagerOrderBoardSettings validation :","Beginning");
+
                 while(isValid) {
                     isValid = GeneralServices.checkEditTextIsNotNull(EditTextAddNewCustomerName.getText().toString());
                     if (!isValid) {
@@ -248,14 +248,10 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                         formEditTextDatePicker.setEnabled(true);
                         formSpinnerCustomers.setEnabled(true);
                         formSpinnerProducts.setEnabled(true);
-                        formEditProductQuantity.setEnabled(true);
+                        formEditTextProductQuantity.setEnabled(true);
 
                         // reset customer name field
                         EditTextAddNewCustomerName.setText("");
-
-                        // Spinner update called inside the OrdersBoard services so as to wait on
-                        // the customer to be added
-                        //OrdersBoardServices.UpdateSpinnerWithCustomerNames(MobSpinnerCustomers,context);
 
                         break;
                     }
@@ -267,18 +263,18 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         buttonAddNewProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ManagerOrderBoardSettings.this, "Moved forward", Toast.LENGTH_SHORT).show();
-
                 // disable components for adding item
+                //
                 buttonAddNewOrder.setVisibility(View.GONE);
                 buttonAddNewCustomer.setVisibility((View.GONE));
                 buttonAddNewProduct.setVisibility((View.GONE));
                 formEditTextDatePicker.setEnabled(false);
                 formSpinnerCustomers.setEnabled(false);
                 formSpinnerProducts.setEnabled(false);
-                formEditProductQuantity.setEnabled(false);
-                //enable components for
+                formEditTextProductQuantity.setEnabled(false);
 
+                //enable components for
+                //
                 viewAddNewProductDialog.setVisibility(View.VISIBLE);
                 viewAddNewProductDialog.setElevation(10);
                 spinnerAddProductCustomerName.setVisibility(View.VISIBLE);
@@ -290,9 +286,6 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         imageButtonCloseNewProductWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Toast.makeText(ManagerOrderBoardSettings.this, "Hiding add product", Toast.LENGTH_SHORT).show();
-
 
                 //enable components for adding new customer
                 //
@@ -310,7 +303,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                 formEditTextDatePicker.setEnabled(true);
                 formSpinnerCustomers.setEnabled(true);
                 formSpinnerProducts.setEnabled(true);
-                formEditProductQuantity.setEnabled(true);
+                formEditTextProductQuantity.setEnabled(true);
 
                 // reset Product name field
                 EditTextAddNewProductName.setText("");
@@ -351,13 +344,12 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                     if(isValid)
                     {
                         Log.d("ManagerOrderBoardSettings validation :", "adding product");
-                        Toast.makeText(ManagerOrderBoardSettings.this, "Hiding add product", Toast.LENGTH_SHORT).show();
 
                         Product product = new Product(EditTextAddNewProductName.getText().toString(),
                                 spinnerAddProductCustomerName.getSelectedItem().toString(),
                                 null);
 
-                        // add customer
+                        // add customer and update dropdown list
                         //
                         OrdersBoardServices.addNewProductToCustomers(product, context, formSpinnerProducts,spinnerAddProductCustomerName);
 
@@ -377,14 +369,10 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                         formEditTextDatePicker.setEnabled(true);
                         formSpinnerCustomers.setEnabled(true);
                         formSpinnerProducts.setEnabled(true);
-                        formEditProductQuantity.setEnabled(true);
+                        formEditTextProductQuantity.setEnabled(true);
 
                         // reset customer name field
                         EditTextAddNewProductName.setText("");
-
-                        // Spinner update called inside the OrdersBoard services so as to wait on
-                        // the customer to be added
-                        //OrdersBoardServices.UpdateSpinnerWithCustomerNames(MobSpinnerCustomers,context);
 
                         break;
                     }
@@ -399,12 +387,6 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                 // update the products dropdown to get the products for that customer
                 //
                 OrdersBoardServices.UpdateSpinnerWithProductNames(formSpinnerCustomers.getSelectedItem().toString(),context,formSpinnerProducts);
-                // update the add product spinner with the currently selected spinner. This will
-                // help the user by keeping both customer name spinners in sync
-                //
-                spinnerAddProductCustomerName.setSelection(formSpinnerCustomers.getSelectedItemPosition());
-                Toast.makeText(ManagerOrderBoardSettings.this, "On change", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override

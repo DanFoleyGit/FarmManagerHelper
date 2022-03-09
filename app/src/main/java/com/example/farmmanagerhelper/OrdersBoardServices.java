@@ -1,7 +1,6 @@
 package com.example.farmmanagerhelper;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -12,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.farmmanagerhelper.models.Customer;
+import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -52,7 +52,7 @@ public class OrdersBoardServices {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("error", error.toString());
             }
         });
     }
@@ -93,7 +93,7 @@ public class OrdersBoardServices {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("error", error.toString());
             }
         });
     }
@@ -137,13 +137,13 @@ public class OrdersBoardServices {
                     // and one in the pop up to add a product
                     //
                     UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddOrder);
-                    UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddProductPopUp);
+                    //UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddProductPopUp);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("error", error.toString());
             }
         });
 
@@ -198,7 +198,7 @@ public class OrdersBoardServices {
     static void UpdateSpinnerWithProductNames(String customer, Context context, Spinner spinner) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("OrdersBoardServices ", "Updating Spinner Product");
+        Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "Updating Spinner Product");
 
         DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
 
@@ -211,7 +211,7 @@ public class OrdersBoardServices {
 
                 // get the farm id
                 //
-                Log.d("OrdersBoardServices ", "FarmId is " + farmId);
+                Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "FarmId is " + farmId);
 
                 // get the products that is stored in the customer table that is gotten from the product
                 // object and add them to a list.
@@ -231,7 +231,7 @@ public class OrdersBoardServices {
 
                 }
 
-                Log.d("OrdersBoardServices ", "ProductList is " + productsList);
+                Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "ProductList is " + productsList);
 
 
                 // create a new adapter which takes a list of products to display
@@ -248,5 +248,82 @@ public class OrdersBoardServices {
     }
 
 
+    // Adds order to the customer/product/orders with a unique id. Checks to see if an order for that
+    // product exists already and if it does it replaces it. If not it adds the new order. This way
+    // for each product and date, only 1 order can exist. It will either be added or updated.
+    //
+    public static void AddOrder(Order order, Context context) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+
+                Log.d("OrdersBoardServices addOrder", "farm Id is " + farmId);
+
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
+
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String keyFromPush = "";
+                        boolean writeNewOrder = true;
+
+                        for (DataSnapshot ds : snapshot.child("customers").child(order.getCustomer())
+                                .child(order.getProduct()).child("orders").getChildren()) {
+
+
+                            Log.d("OrdersBoardServices addOrder", ds.toString());
+
+
+                            //check if the order date exists already
+                            if (ds.child("orderDate").getValue().toString().equals(order.getOrderDate())) {
+                                //replace order
+                                Log.d("OrdersBoardServices addOrder", " replacing order " +order.getProduct() + " on "+ order.getOrderDate());
+                                Toast.makeText(context, "Updating Order " + order.getOrderDate(), Toast.LENGTH_SHORT).show();
+
+                                order.setOrderID(ds.getKey());
+                                DatabaseManager.replaceOrderForCustomer(order,farmId,dbFarmRef);
+
+                                writeNewOrder = false;
+                                break;
+
+                            }
+                        }
+                        if(writeNewOrder)
+                        {
+                            //write new order
+                            Log.d("OrdersBoardServices addOrder", " Writing new order");
+
+                            //get unique key
+                            //
+                            keyFromPush = dbFarmRef.child("customers").child(order.getCustomer())
+                                    .child(order.getProduct()).push().getKey();
+                            order.setOrderID(keyFromPush);
+
+                            DatabaseManager.addOrderToCustomer(order,farmId,dbFarmRef);
+
+                            Toast.makeText(context, "Adding Order", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
 }

@@ -6,9 +6,11 @@ import androidx.annotation.NonNull;
 
 import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Farm;
+import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.Product;
 import com.example.farmmanagerhelper.models.TimetableTask;
 import com.example.farmmanagerhelper.models.User;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +33,33 @@ public class DatabaseManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //database.setPersistenceEnabled(true);
         DatabaseReference dbRef = database.getReference();
+
+        return dbRef;
+    }
+
+    public static DatabaseReference getFarmTableDatabaseReference()
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("farm_table");
+
+        return dbRef;
+    }
+
+    public static DatabaseReference getUsersTableDatabaseReference(String userId)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("users").child(userId);
+
+        return dbRef;
+    }
+
+    public static DatabaseReference getFarmDatabaseReferenceByName(String farmName)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName);
 
         return dbRef;
     }
@@ -164,5 +193,27 @@ public class DatabaseManager {
                 .child(product.getProductName()).setValue(product);
 
         Log.d("Database write: ","New customer " + product.getProductName()+ " from farm : "+ farmId );
+    }
+
+    public static void addOrderToCustomer(Order order, String farmId, DatabaseReference dbFarmRef) {
+
+        dbFarmRef.child("customers").child(order.getCustomer()).child(order.getProduct()).child("orders").child(order.getOrderID()).setValue(order);
+
+        Log.d("Database write addOrderToCustomer","New order " + order.getOrderID() + " from farm : "+ farmId );
+
+    }
+
+    // deletes the previous order and writes the new order in its place. It uses a an on success listener
+    // to wait for the delete and then rewrite the new order with the same id
+    public static void replaceOrderForCustomer(Order order, String farmId, DatabaseReference dbFarmRef) {
+
+        dbFarmRef.child("customers").child(order.getCustomer()).child(order.getProduct()).child("orders")
+                .child(order.getOrderID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                dbFarmRef.child("customers").child(order.getCustomer()).child(order.getProduct()).child("orders").child(order.getOrderID()).setValue(order);
+                Log.d("Database write addOrderToCustomer","Updating " + order.getOrderID() + " in farm : "+ farmId );
+            }
+        });
     }
 }
