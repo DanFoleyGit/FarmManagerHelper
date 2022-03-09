@@ -60,7 +60,7 @@ public class OrdersBoardServices {
         });
     }
 
-    public static void addCustomerToFarmOrderBoard(Context context, Customer customer, Spinner mobSpinnerCustomers) {
+    public static void addCustomerToFarmOrderBoard(Context context, Customer customer, Spinner formSpinnerCustomers, Spinner spinnerAddProductCustomerName) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -88,7 +88,9 @@ public class OrdersBoardServices {
                     Toast.makeText(context, "Adding customer", Toast.LENGTH_SHORT).show();
                     Log.d("OrderBardServices :", "Adding Customer: "+ customer.getCustomerName()  );
                     DatabaseManager.addNewCustomerToFarmTable(customer,farmId);
-                    UpdateSpinnerWithCustomerNames(mobSpinnerCustomers,context);
+                    UpdateSpinnerWithCustomerNames(formSpinnerCustomers,context);
+                    UpdateSpinnerWithCustomerNames(spinnerAddProductCustomerName,context);
+
                 }
 
 
@@ -106,7 +108,7 @@ public class OrdersBoardServices {
     // product to that customer and then call UpdateSpinnerWithProductNames to update the porducts
     // dropdown menu.
     //
-    public static void addNewProductToCustomers(Product product, Context context, Spinner spinnerAddOrder, Spinner spinnerAddProductPopUp) {
+    public static void addNewProductToCustomers(Product product, Context context, Spinner spinnerAddOrder) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d("OrdersBoardServices ", "Updating Spinner ");
@@ -422,7 +424,6 @@ public class OrdersBoardServices {
 
                         OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orderBoard);
                         listView.setAdapter(adapter);
-
 
                     }
 

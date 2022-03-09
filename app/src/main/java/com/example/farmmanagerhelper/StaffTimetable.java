@@ -150,6 +150,8 @@ public class StaffTimetable extends AppCompatActivity {
         //
         TimetableServices.getDatesTasksAndUpdateTimeTable(editTextDatePicker.getText().toString(), listView, context);
 
+        // TODO set up listener like in orderboard that listens for changes in the users timetable
+
     }
 //
 //    private void getDatesTasksAndUpdateTimeTable(String date, ListView listView) {

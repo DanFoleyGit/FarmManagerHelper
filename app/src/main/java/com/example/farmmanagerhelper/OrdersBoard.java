@@ -1,11 +1,13 @@
 package com.example.farmmanagerhelper;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -13,6 +15,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,6 +33,7 @@ public class OrdersBoard extends AppCompatActivity {
     //get calander instance for datePicker
     //
     final Calendar myCalendar = Calendar.getInstance();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,9 +144,62 @@ public class OrdersBoard extends AppCompatActivity {
             }
         });
         // TODO add on click to change the product status
-        // TODO  add on pause and restart that will reload the order board as when the manager returns from the settings the orders board has not updated
         // get orders board for current date
         //
+        OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
+
+        // Listener set up that listens for changes in the customer table.
+        //
+        setListenerForNewOrders(editTextDatePicker,context,listView);
+
+
+    }
+
+    private void setListenerForNewOrders(EditText editTextDatePicker, Context context, ListView listView) {
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
+                dbFarmRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
+                        Toast.makeText(OrdersBoard.this, "Timetable Updated", Toast.LENGTH_LONG).show();
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+
+        EditText editTextDatePicker = findViewById(R.id.ordersBoardDatePicker);
+        Context context = this;
+        ListView listView = (ListView) findViewById(R.id.OrdersBoardListView);
+
+        Log.d("OrdersBoardServices onResume", "Reloading order page");
+
+
         OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
 
     }
