@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -45,6 +46,12 @@ public class OrdersBoard extends AppCompatActivity {
         // SetDate to todays date
         //
         GeneralServices.SetDateToTodaysDate(editTextDatePicker,myCalendar);
+
+        // set up listview
+        //
+        ListView listView = (ListView) findViewById(R.id.OrdersBoardListView);
+
+
 
         // set up the dialog box to give dates in dd/MM/yy
         //
@@ -124,6 +131,8 @@ public class OrdersBoard extends AppCompatActivity {
 
             }
         });
+
+        OrdersBoardServices.testOrderboard(context,listView);
 
     }
 }

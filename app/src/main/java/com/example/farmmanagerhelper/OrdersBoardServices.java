@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 
 import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Order;
+import com.example.farmmanagerhelper.models.OrderBoardOrderItem;
 import com.example.farmmanagerhelper.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -325,5 +327,32 @@ public class OrdersBoardServices {
                 Log.d("error", error.toString());
             }
         });
+    }
+
+    public static void testOrderboard(Context context, ListView listView) {
+        OrderBoardOrderItem item1 = new OrderBoardOrderItem("The Shop",null,false);
+        OrderBoardOrderItem item11 = new OrderBoardOrderItem("item 1","10",false);
+        OrderBoardOrderItem item2 = new OrderBoardOrderItem("item2","20",false);
+        OrderBoardOrderItem item3 = new OrderBoardOrderItem("item 3","180",false);
+
+        OrderBoardOrderItem item4 = new OrderBoardOrderItem("The Other Shop",null,false);
+        OrderBoardOrderItem item5 = new OrderBoardOrderItem("item 1","120",false);
+        OrderBoardOrderItem item6 = new OrderBoardOrderItem("item 2","90",false);
+        OrderBoardOrderItem item7 = new OrderBoardOrderItem("item 3","180",false);
+        
+        ArrayList<OrderBoardOrderItem> orders = new ArrayList<>();
+
+        orders.add(item1);
+        orders.add(item11);
+        orders.add(item2);
+        orders.add(item3);
+        orders.add(item4);
+        orders.add(item5);
+        orders.add(item6);
+        orders.add(item7);
+
+        OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orders);
+        listView.setAdapter(adapter);
+
     }
 }
