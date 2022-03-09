@@ -10,7 +10,7 @@
         android:id="@+id/TextViewOrderBoardRowProductName"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_weight="66.6"
+        android:layout_weight="50"
         android:gravity="center"
         android:text="Product Name"
         android:textAlignment="center" />
@@ -19,7 +19,7 @@
         android:id="@+id/TextViewOrderBoardRowQuantity"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_weight="66.6"
+        android:layout_weight="80"
         android:gravity="center"
         android:text=""
         android:textAlignment="center" />
@@ -28,7 +28,7 @@
         android:id="@+id/TextViewOrderBoardRowStatus"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_weight="66.6"
+        android:layout_weight="70"
         android:gravity="center"
         android:text=""
         android:textAlignment="center" />

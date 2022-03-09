@@ -15,6 +15,7 @@ import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.OrderBoardOrderItem;
 import com.example.farmmanagerhelper.models.Product;
+import com.example.farmmanagerhelper.models.TimeSlot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -249,6 +250,8 @@ public class OrdersBoardServices {
         });
     }
 
+     // TODO if zero is entered as quantity, find the match and delete it
+
 
     // Adds order to the customer/product/orders with a unique id. Checks to see if an order for that
     // product exists already and if it does it replaces it. If not it adds the new order. This way
@@ -354,5 +357,85 @@ public class OrdersBoardServices {
         OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orders);
         listView.setAdapter(adapter);
 
+    }
+
+    // gets thefarm id and then gets a database reference for the customer table in that farm.
+    // loops through all the customers, each time looping through their products. If the product date
+    // matches the date provided, its details are added to a list of OrderBoardOrderItem. Once all that customers Items are
+    // added, it creates a header for the next customer and repeats until it has all the orders for that
+    // day. The object is then passed to the OrdersBoardListAdapter to display to the user.
+    //
+    public static void updateOrderBoardWithDate(String date, Context context, ListView listView) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        // get the farm id
+        //
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+        ArrayList<OrderBoardOrderItem> orderBoard = new ArrayList<>();
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+                Log.d("OrdersBoardServices updateOrderBoardWithDate", "farm Id is " + farmId);
+
+                // get the customer table for that farm.
+                //
+                DatabaseReference dbCustomerRef = DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
+
+                dbCustomerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        // loop through all customers
+                        //
+                        for (DataSnapshot dsCust : snapshot.getChildren()) {
+                            Log.d("OrdersBoardServices updateOrderBoardWithDate", "Searching Customer " + dsCust.getKey());
+
+
+                            OrderBoardOrderItem customerHeader = new OrderBoardOrderItem(dsCust.getKey(),null, false);
+                            orderBoard.add(customerHeader);
+
+                            // loop through products
+                            for (DataSnapshot dsProd : snapshot.child(dsCust.getKey()).getChildren()) {
+                                Log.d("OrdersBoardServices updateOrderBoardWithDate", "Searching Product " + dsProd.getKey());
+
+                                // loop through products
+                                for (DataSnapshot dsOrder : snapshot.child(dsCust.getKey()).child(dsProd.getKey()).child("orders").getChildren()) {
+                                    Log.d("OrdersBoardServices updateOrderBoardWithDate", "Searching orders " + dsOrder.getKey());
+
+                                    // get Order in object
+                                    Order order = dsOrder.getValue(Order.class);
+
+                                    // If the order object's date matches the date provided, copy its details and add it to teh
+                                    if(order.getOrderDate().equals(date))
+                                    {
+                                        OrderBoardOrderItem item = new OrderBoardOrderItem(order.getProduct(),order.getQuantity(),order.isOrderComplete());
+                                        orderBoard.add(item);
+                                    }
+
+                                }
+                            }
+                        }
+
+                        OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orderBoard);
+                        listView.setAdapter(adapter);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
     }
 }

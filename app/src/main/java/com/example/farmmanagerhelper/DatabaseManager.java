@@ -37,15 +37,6 @@ public class DatabaseManager {
         return dbRef;
     }
 
-    public static DatabaseReference getFarmTableDatabaseReference()
-    {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //database.setPersistenceEnabled(true);
-        DatabaseReference dbRef = database.getReference().child("farm_table");
-
-        return dbRef;
-    }
-
     public static DatabaseReference getUsersTableDatabaseReference(String userId)
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -60,6 +51,15 @@ public class DatabaseManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         //database.setPersistenceEnabled(true);
         DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName);
+
+        return dbRef;
+    }
+
+    public static DatabaseReference getCustomerTableDatabaseReferenceByFarmName(String farmName)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName).child("customers");
 
         return dbRef;
     }

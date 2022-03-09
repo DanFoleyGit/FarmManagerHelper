@@ -17,6 +17,12 @@ public class Order {
         this.orderComplete = orderComplete;
     }
 
+    // no argument constructor
+    public Order()
+    {
+
+    }
+
     public String getOrderID() {
         return orderID;
     }

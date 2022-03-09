@@ -97,6 +97,7 @@ public class OrdersBoard extends AppCompatActivity {
 
                 c.add(Calendar.DATE,1);
                 editTextDatePicker.setText(dateFormat.format(c.getTime()));
+                OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
 
             }
         });
@@ -118,6 +119,7 @@ public class OrdersBoard extends AppCompatActivity {
 
                 c.add(Calendar.DATE,-1);
                 editTextDatePicker.setText(dateFormat.format(c.getTime()));
+                OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
 
             }
         });
@@ -131,8 +133,11 @@ public class OrdersBoard extends AppCompatActivity {
 
             }
         });
-
-        OrdersBoardServices.testOrderboard(context,listView);
+        // TODO add on click to change the product status
+        // TODO  add on pause and restart that will reload the order board as when the manager returns from the settings the orders board has not updated
+        // get orders board for current date
+        //
+        OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
 
     }
 }

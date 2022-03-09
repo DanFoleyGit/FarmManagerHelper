@@ -2,10 +2,13 @@ package com.example.farmmanagerhelper;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,6 +48,7 @@ public class OrdersBoardListAdapter extends ArrayAdapter<OrderBoardOrderItem> {
         String orderRowQuantity = getItem(position).getQuantity();
         Boolean orderRowOrderComplete = getItem(position).isOrderComplete();
 
+
         OrderBoardOrderItem order = new OrderBoardOrderItem(orderRowName, orderRowQuantity,orderRowOrderComplete);
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -55,18 +59,45 @@ public class OrdersBoardListAdapter extends ArrayAdapter<OrderBoardOrderItem> {
         TextView textViewOrderRowQuantity = (TextView) convertView.findViewById(R.id.TextViewOrderBoardRowQuantity);
         TextView textViewOrderRowOrderComplete = (TextView) convertView.findViewById(R.id.TextViewOrderBoardRowStatus);
 
+        // get layout parameters encase Its a header and needs to be stretched the full way across.
+        //
+        LinearLayout.LayoutParams rowNameParams = (LinearLayout.LayoutParams)
+                textViewOrderRowName.getLayoutParams();
 
+
+        // if its the header
         if(orderRowQuantity == null)
         {
+            // set text to be align left, increase size and make it take up 100% width
+            //
             textViewOrderRowName.setText(orderRowName);
+            textViewOrderRowName.setTextSize(TypedValue.COMPLEX_UNIT_SP,18);
+            rowNameParams.weight = 0.99f;
+            textViewOrderRowName.setLayoutParams(rowNameParams);
+
+            // set background colour
+            //
             textViewOrderRowName.setBackgroundColor(Color.parseColor("#bdbdbd"));
-            textViewOrderRowQuantity.setBackgroundColor(Color.parseColor("#bdbdbd"));
-            textViewOrderRowOrderComplete.setBackgroundColor(Color.parseColor("#bdbdbd"));
+
+            // hide other elements
+            //
+            textViewOrderRowQuantity.setVisibility(View.GONE);
+            textViewOrderRowOrderComplete.setVisibility(View.GONE);
+
         }
         else {
             textViewOrderRowName.setText(orderRowName);
             textViewOrderRowQuantity.setText(orderRowQuantity);
-            textViewOrderRowOrderComplete.setText(orderRowOrderComplete.toString());
+
+            if(orderRowOrderComplete)
+            {
+                textViewOrderRowOrderComplete.setText("Completed");
+            }
+            else
+            {
+                textViewOrderRowOrderComplete.setText("Not Ready");
+
+            }
         }
 
         return convertView;
