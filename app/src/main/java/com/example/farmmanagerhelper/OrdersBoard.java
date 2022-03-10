@@ -48,11 +48,11 @@ public class OrdersBoard extends AppCompatActivity {
         ImageButton buttonBackDate = findViewById(R.id.ordersBoardBackDateButton);
         Button buttonOpenManagerOrdersBoardOptions = findViewById(R.id.openManagerOrdersBoardOptions);
 
-        // check if the user is manager and allow them to use the button to access manager only
-        // settings
+        // check if the user is manager and allow them to use the button to access manager only settings
+        //
         OrdersBoardServices.makeOpenEditOrdersActivityVisibleForManagers(buttonOpenManagerOrdersBoardOptions);
 
-        // SetDate to todays date
+        // SetDate to today's date
         //
         GeneralServices.SetDateToTodaysDate(editTextDatePicker,myCalendar);
 

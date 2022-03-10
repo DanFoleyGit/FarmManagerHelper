@@ -61,7 +61,8 @@ public class OrdersBoardServices {
         });
     }
 
-    public static void addCustomerToFarmOrderBoard(Context context, Customer customer, Spinner formSpinnerCustomers, Spinner spinnerAddProductCustomerName) {
+    public static void addCustomerToFarmOrderBoard(Context context, Customer customer, Spinner formSpinnerCustomers,
+                                                   Spinner spinnerAddProductCustomerName, Spinner spinnerDeleteCustomer) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -91,6 +92,7 @@ public class OrdersBoardServices {
                     DatabaseManager.addNewCustomerToFarmTable(customer,farmId);
                     UpdateSpinnerWithCustomerNames(formSpinnerCustomers,context);
                     UpdateSpinnerWithCustomerNames(spinnerAddProductCustomerName,context);
+                    UpdateSpinnerWithCustomerNames(spinnerDeleteCustomer,context);
 
                 }
 
@@ -109,7 +111,7 @@ public class OrdersBoardServices {
     // product to that customer and then call UpdateSpinnerWithProductNames to update the porducts
     // dropdown menu.
     //
-    public static void addNewProductToCustomers(Product product, Context context, Spinner spinnerAddOrder) {
+    public static void addNewProductToCustomers(Product product, Context context, Spinner spinnerAddOrder, Spinner spinnerDeleteProduct) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         Log.d("OrdersBoardServices ", "Updating Spinner ");
@@ -143,7 +145,7 @@ public class OrdersBoardServices {
                     // and one in the pop up to add a product
                     //
                     UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddOrder);
-                    //UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddProductPopUp);
+                    UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerDeleteProduct);
                 }
             }
 

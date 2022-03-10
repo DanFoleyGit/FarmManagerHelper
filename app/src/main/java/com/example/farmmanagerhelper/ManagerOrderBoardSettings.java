@@ -275,10 +275,9 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
 
                         customer = new Customer(EditTextAddNewCustomerName.getText().toString());
 
-                        // add customer
+                        // add customer and update the 3 customer spinners after the database write
                         //
-                        OrdersBoardServices.addCustomerToFarmOrderBoard(context, customer,formSpinnerCustomers,spinnerAddProductCustomerName);
-
+                        OrdersBoardServices.addCustomerToFarmOrderBoard(context, customer,formSpinnerCustomers,spinnerAddProductCustomerName,spinnerDeleteCustomer);
 
                         //enable components for adding new customer
                         //
@@ -413,7 +412,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
 
                         // add customer and update dropdown list
                         //
-                        OrdersBoardServices.addNewProductToCustomers(product, context, formSpinnerProducts);
+                        OrdersBoardServices.addNewProductToCustomers(product, context, formSpinnerProducts,spinnerDeleteProduct);
 
                         //enable components for adding new customer
                         //
