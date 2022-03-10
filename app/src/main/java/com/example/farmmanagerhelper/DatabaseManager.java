@@ -1,6 +1,7 @@
 package com.example.farmmanagerhelper;
 
 import android.util.Log;
+import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 
@@ -27,6 +28,9 @@ public class DatabaseManager {
 
     // other variables
     String stringIndicatingUserIsNotInFarm = "none";
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // functions in this section are used to get database references
 
     public static DatabaseReference getDatabaseReference()
     {
@@ -55,14 +59,28 @@ public class DatabaseManager {
         return dbRef;
     }
 
-    public static DatabaseReference getCustomerTableDatabaseReferenceByFarmName(String farmName)
+    // checks the user id is in the database and checks if the user id is in a farm. returns true
+    // if it is and false if not
+    public static DatabaseReference getDatabaseRefForUserId(FirebaseUser firebaseUser)
     {
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        //database.setPersistenceEnabled(true);
-        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName).child("customers");
+        DatabaseReference dbRef = database.getReference().child("users").child(firebaseUser.getUid());
 
         return dbRef;
+
     }
+
+    public static DatabaseReference getDatabaseRefForFarmName(String farmNameFromInput)
+    {
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmNameFromInput);
+        return dbRef;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // functions in this section are to do with the user functionality
 
     public static boolean addUserToDatabase(User user)
     {
@@ -92,10 +110,8 @@ public class DatabaseManager {
         dbRef.child("farm_table").child(farm.farmName).child("usersInFarm").child(farm.managerID).setValue(farm.managerID);
 
         // add farm to user
+        //
         AddFarmNameToUserAndUserToFarm(farm.farmName,farm.managerID);
-        //add
-        // create timetable
-        // create order board table
 
         return true;
     }
@@ -115,7 +131,6 @@ public class DatabaseManager {
                 String lastName = snapshot.child("users").child(userID).child("lastName").getValue().toString();
                 String fullName = firstName + " " + lastName;
 
-                //dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).setValue(fullName);
                 dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID);
                 dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).child("name").setValue(fullName);
 
@@ -144,36 +159,23 @@ public class DatabaseManager {
         Log.d("Database access: "," Removed user: " +userID+ " from farm : "+ farmName );
     }
 
-    // checks the user id is in the database and checks if the user id is in a farm. returns true
-    // if it is and false if not
-    public static DatabaseReference getDatabaseRefForUserId(FirebaseUser firebaseUser)
-    {
-
-        // https://stackoverflow.com/questions/67832715/how-to-retrieve-specific-data-from-firebase-realtime-database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference().child("users").child(firebaseUser.getUid());
-
-        return dbRef;
-
-    }
-
-    public static DatabaseReference getDatabaseRefForFarmName(String farmNameFromInput)
-    {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmNameFromInput);
-        return dbRef;
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // functions in this section are to do with the Timetable functionality
 
     public static void AddNewTaskToUserInFarmTimeTable(String userId, String farmId, TimetableTask task) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference();
 
         // add new task to the user in usersInFarm giving the unique key as the identifier
+        //
         dbRef.child("farm_table").child(farmId).child("usersInFarm").child(userId).child("timetable").child(task.getTaskID()).setValue(task);
         Log.d("Database write: ","New task added to " +userId+ " from farm : "+ farmId );
 
     }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // functions in this section are to do with the orders board functionality
+
 
     public static void addNewCustomerToFarmTable(Customer customer, String farmId) {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -183,6 +185,15 @@ public class DatabaseManager {
 
         Log.d("Database write: ","New customer " + customer.getCustomerName()+ " from farm : "+ farmId );
 
+    }
+
+    public static DatabaseReference getCustomerTableDatabaseReferenceByFarmName(String farmName)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName).child("customers");
+
+        return dbRef;
     }
 
     public static void addNewProductToCustomerTable(Product product, String farmId) {
@@ -245,5 +256,25 @@ public class DatabaseManager {
             Log.d("Database write deleteOrderForCustomer","Updated " + order.getOrderID() + " to " + order.isOrderComplete());
         }
     });
+    }
+
+    public static void deleteCustomerFromFarm(DatabaseReference dbCustRef, String customer) {
+        dbCustRef.child(customer).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Log.d("Database write deleteCustomerFromFarm","Delete Successful" );
+            }
+        });
+    }
+
+    public static void deleteProductFromCustomer(DatabaseReference dbCustRef, String product, String customer) {
+        dbCustRef.child(customer).child(product).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Log.d("Database write deleteProductFromCustomer","Delete Successful" );
+            }
+        });
     }
 }

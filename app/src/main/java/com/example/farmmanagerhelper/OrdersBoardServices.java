@@ -549,4 +549,84 @@ public class OrdersBoardServices {
             }
         });
     }
+
+    // This function takes a customer name and passes it to DatabaseManager.deleteCustomerFromFarm
+    // along with a database reference to the customer table.
+    //
+    public static void deleteCustomerFromFarm(String customer, Context context) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+
+                Log.d("OrdersBoardServices deleteCustomer", "Deleting " + customer + " from farm " + farmId);
+
+                DatabaseReference dbCustRef =  DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
+
+                dbCustRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        DatabaseManager.deleteCustomerFromFarm(dbCustRef,customer);
+
+                        Toast.makeText(context, "Deleting " + customer, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
+
+    // This function takes a product name and customer name and passes the a customer table database reference to
+    // DatabaseManager.deleteProductFromCustomer() to delete the product
+    //
+    public static void deleteProductFromCustomerInFarm(String product, String customer, Context context) {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+
+                Log.d("OrdersBoardServices deleteProductFromCustomerInFarm", "Deleting " + product + " from " + customer+" in farm " + farmId);
+
+                DatabaseReference dbCustRef =  DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
+
+                dbCustRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        DatabaseManager.deleteProductFromCustomer(dbCustRef, product, customer);
+                        Toast.makeText(context, "Deleting " + product, Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
 }

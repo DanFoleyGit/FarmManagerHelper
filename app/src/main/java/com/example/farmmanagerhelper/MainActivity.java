@@ -60,8 +60,6 @@ public class MainActivity extends AppCompatActivity {
             if(checkUserIsInFarm(currentUser))
             {
                 Log.d("MainActivity", "User checked and is in farm");
-                Toast toast = Toast.makeText(MainActivity.this, "User checked", Toast.LENGTH_SHORT);
-                toast.show();
             }
 
             else{

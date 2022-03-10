@@ -141,6 +141,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonManagerOrderSettingsAddNewOrder" />
 
+
     <EditText
         android:id="@+id/editTextProductQuantity"
         android:layout_width="200dp"
@@ -153,7 +154,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/SpinnerManagerOrderBoardSettingsProduct" />
 
-<!-- add customer popup -->
+    <!-- add customer popup -->
+
+    <Button
+        android:id="@+id/buttonManagerOrderSettingsOpeneDeleteCustomerOrProductPopup"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="75dp"
+        android:layout_marginTop="508dp"
+
+        android:text="Remove Customer Or Product"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.338"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <view
         android:id="@+id/AddNewCustomerDialog"
         class="androidx.coordinatorlayout.widget.CoordinatorLayout"
@@ -221,6 +236,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
     </view>
 
 <!-- add Product to customer popup -->
@@ -295,6 +311,122 @@
             android:layout_width="190dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
+            android:layout_marginStart="25dp"
+            android:text=""
+            android:textColor="#FF0000"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </view>
+
+    <view
+        android:id="@+id/removeCustomerOrProductPopUp"
+        class="androidx.coordinatorlayout.widget.CoordinatorLayout"
+        android:layout_width="250dp"
+        android:layout_height="400dp"
+        android:background="#FFFFFF"
+        android:windowIsTranslucent="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.498"
+        tools:context=".ManagerOrderBoardSettings"
+        android:visibility="gone"
+        >
+        <TextView
+            android:id="@+id/managerOrderBoardDeleteCustomerOrProductMessage"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="20dp"
+            android:text="Select What you would like to delete."
+            android:textSize="14sp"
+            android:textAlignment="viewStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_marginStart="20dp"
+            android:orientation="vertical">
+            <RadioButton android:id="@+id/radio_DeleteCustomer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Customer" />
+            <RadioButton android:id="@+id/radio_DeleteProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Product" />
+        </RadioGroup>
+
+        <ImageButton
+            android:id="@+id/imageButtonCloseDeleteCustomerOrProductPopUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_close_clear_cancel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+        <!--android:visibility="gone"-->
+
+        <Button
+            android:id="@+id/buttonManagerOrderSettingsDeleteCustomerOrProduct"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="320dp"
+            android:layout_marginStart="75dp"
+            android:text="DELETE"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinnerDeleteCustomer"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="170dp"
+            android:layout_marginStart="25dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:hint="Customer"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+        <Spinner
+            android:id="@+id/spinnerDeleteProduct"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="220dp"
+            android:layout_marginStart="25dp"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:hint="Customer"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            />
+
+        <RadioButton android:id="@+id/radio_DeleteConfirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="290dp"
+            android:layout_marginStart="75dp"
+            android:text="Confirm Delete"
+            android:onClick="onRadioButtonClicked"/>
+
+
+        <TextView
+            android:id="@+id/managerOrderBoardDeleteCustomerOrProductErrorMsg"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="260dp"
             android:layout_marginStart="25dp"
             android:text=""
             android:textColor="#FF0000"
