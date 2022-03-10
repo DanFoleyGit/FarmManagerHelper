@@ -158,14 +158,13 @@
 
     <Button
         android:id="@+id/buttonManagerOrderSettingsOpeneDeleteCustomerOrProductPopup"
-        android:layout_width="100dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="75dp"
-        android:layout_marginTop="508dp"
+        android:layout_marginTop="516dp"
 
         android:text="Remove Customer Or Product"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.338"
+        app:layout_constraintHorizontal_bias="0.507"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

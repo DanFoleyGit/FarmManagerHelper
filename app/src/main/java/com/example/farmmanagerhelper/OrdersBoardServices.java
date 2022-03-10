@@ -255,9 +255,6 @@ public class OrdersBoardServices {
         });
     }
 
-     // TODO if zero is entered as quantity, find the match and delete it
-
-
     // Adds order to the customer/product/orders with a unique id. Checks to see if an order for that
     // product exists already and if it does it replaces it. If not it adds the new order. This way
     // for each product and date, only 1 order can exist. It will either be added or updated.
