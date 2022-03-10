@@ -3,6 +3,7 @@ package com.example.farmmanagerhelper;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -287,8 +288,8 @@ public class OrdersBoardServices {
 
                             Log.d("OrdersBoardServices addOrder", ds.toString());
 
-
                             //check if the order date exists already
+                            //
                             if (ds.child("orderDate").getValue().toString().equals(order.getOrderDate())) {
                                 //replace order
                                 Log.d("OrdersBoardServices addOrder", " replacing order " +order.getProduct() + " on "+ order.getOrderDate());
@@ -334,6 +335,65 @@ public class OrdersBoardServices {
         });
     }
 
+    // This function takes an order object and deletes it. This is called when a user enters 0 as
+    // the quantity. It checks if the order first exists before deleting it
+    public static void deleteOrder(Order order, Context context) {
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+
+                Log.d("OrdersBoardServices deleteOrder", "farm Id is " + farmId);
+
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
+
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                        String keyFromPush = "";
+
+                        for (DataSnapshot ds : snapshot.child("customers").child(order.getCustomer())
+                                .child(order.getProduct()).child("orders").getChildren()) {
+
+
+                            Log.d("OrdersBoardServices deleteOrder", ds.toString());
+
+                            //check if the order date exists already
+                            //
+                            if (ds.child("orderDate").getValue().toString().equals(order.getOrderDate())) {
+                                //replace order
+                                Log.d("OrdersBoardServices addOrder", " Deleting " +order.getProduct() + " on "+ order.getOrderDate());
+                                Toast.makeText(context, "Updating Order " + order.getOrderDate(), Toast.LENGTH_SHORT).show();
+
+                                order.setOrderID(ds.getKey());
+                                DatabaseManager.deleteOrderForCustomer(order,farmId,dbFarmRef);
+
+                                break;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
+
     public static void testOrderboard(Context context, ListView listView) {
         OrderBoardOrderItem item1 = new OrderBoardOrderItem("The Shop",null,false);
         OrderBoardOrderItem item11 = new OrderBoardOrderItem("item 1","10",false);
@@ -356,18 +416,24 @@ public class OrdersBoardServices {
         orders.add(item6);
         orders.add(item7);
 
-        OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orders);
-        listView.setAdapter(adapter);
+//        OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orders);
+//        listView.setAdapter(adapter);
 
     }
 
-    // gets thefarm id and then gets a database reference for the customer table in that farm.
+    // gets the farm id and then gets a database reference for the customer table in that farm.
     // loops through all the customers, each time looping through their products. If the product date
     // matches the date provided, its details are added to a list of OrderBoardOrderItem. Once all that customers Items are
     // added, it creates a header for the next customer and repeats until it has all the orders for that
     // day. The object is then passed to the OrdersBoardListAdapter to display to the user.
     //
-    public static void updateOrderBoardWithDate(String date, Context context, ListView listView) {
+    // Once setting the list view, a listener is placed on the list view. If a user taps on the selected item,
+    // The listener will take the row as a Order object and pass it to changeOrderCompleteStatus. It toggles the
+    // status in the database from tru to false. This is then interpreted in the OrdersBoardListAdapter()
+    // to read as complete or not ready.
+    //
+    //
+    public static void updateOrderBoardAndListViewOnClickListenerWithDate(String date, Context context, ListView listView) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -375,7 +441,7 @@ public class OrdersBoardServices {
         //
         DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
-        ArrayList<OrderBoardOrderItem> orderBoard = new ArrayList<>();
+        ArrayList<Order> orderBoard = new ArrayList<>();
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -397,7 +463,7 @@ public class OrdersBoardServices {
                             Log.d("OrdersBoardServices updateOrderBoardWithDate", "Searching Customer " + dsCust.getKey());
 
 
-                            OrderBoardOrderItem customerHeader = new OrderBoardOrderItem(dsCust.getKey(),null, false);
+                            Order customerHeader = new Order(null,null,dsCust.getKey(),null,null, false);
                             orderBoard.add(customerHeader);
 
                             // loop through products
@@ -414,8 +480,7 @@ public class OrdersBoardServices {
                                     // If the order object's date matches the date provided, copy its details and add it to teh
                                     if(order.getOrderDate().equals(date))
                                     {
-                                        OrderBoardOrderItem item = new OrderBoardOrderItem(order.getProduct(),order.getQuantity(),order.isOrderComplete());
-                                        orderBoard.add(item);
+                                        orderBoard.add(order);
                                     }
 
                                 }
@@ -425,14 +490,59 @@ public class OrdersBoardServices {
                         OrdersBoardListAdapter adapter = new OrdersBoardListAdapter(context,R.layout.orders_board_row,orderBoard);
                         listView.setAdapter(adapter);
 
+
+                        // Listener takes a row selected and checks if it is a header by seeing if order.quantity is null.
+                        // It will then create an Order object and and toggle orderComplete. It is then passed too
+                        // changeOrderCompleteStatus to update the database
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                                Order order = new Order(orderBoard.get(i).getOrderID(),orderBoard.get(i).getOrderDate(), orderBoard.get(i).getCustomer(),
+                                        orderBoard.get(i).getProduct(), orderBoard.get(i).getQuantity(), orderBoard.get(i).isOrderComplete());
+
+                                if(order.getProduct() !=null)
+                                {
+                                    if(!order.isOrderComplete())
+                                    {
+                                        order.setOrderComplete(true);
+                                    }
+                                    else
+                                    {
+                                        order.setOrderComplete(false);
+                                    }
+                                    changeOrderCompleteStatus(farmId, order);
+                                }
+                            }
+                        });
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
-
+                        Log.d("error", error.toString());
                     }
                 });
             }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
+
+    private static void changeOrderCompleteStatus(String farmId, Order order) {
+        // get the customer table for that farm.
+        //
+        DatabaseReference dbCustomerRef = DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
+
+        dbCustomerRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                if (snapshot.child(order.getCustomer()).child(order.getProduct()).child("orders").child(order.getOrderID()).exists()) {
+                    DatabaseManager.changeOrderCompleteStatusValue(dbCustomerRef, order);
+                }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("error", error.toString());

@@ -32,6 +32,33 @@
         android:gravity="center"
         android:text=""
         android:textAlignment="center" />
+    <TextView
+        android:id="@+id/TextViewOrderBoardCustomer"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="100"
+        android:gravity="center"
+        android:text=""
+        android:textAlignment="center"
+        />
+    <TextView
+        android:id="@+id/TextViewOrderBoardDate"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="100"
+        android:gravity="center"
+        android:text=""
+        android:textAlignment="center"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/TextViewOrderID"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_weight="100"
+        android:gravity="center"
+        android:text=""
+        android:textAlignment="center"
+        android:visibility="gone"/>
 
 
 </LinearLayout>

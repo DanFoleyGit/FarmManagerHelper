@@ -34,7 +34,6 @@ public class OrdersBoard extends AppCompatActivity {
     //
     final Calendar myCalendar = Calendar.getInstance();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,12 +106,13 @@ public class OrdersBoard extends AppCompatActivity {
 
                 c.add(Calendar.DATE,1);
                 editTextDatePicker.setText(dateFormat.format(c.getTime()));
-                OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
+                OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
 
             }
         });
 
-        // Adjust the date forward and call update the timetable
+        // Adjust the date forward and call updateOrderBoardAndListViewOnClickListenerWithDate()
+        //
         buttonBackDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -129,7 +129,7 @@ public class OrdersBoard extends AppCompatActivity {
 
                 c.add(Calendar.DATE,-1);
                 editTextDatePicker.setText(dateFormat.format(c.getTime()));
-                OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
+                OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
 
             }
         });
@@ -143,10 +143,10 @@ public class OrdersBoard extends AppCompatActivity {
 
             }
         });
-        // TODO add on click to change the product status
+
         // get orders board for current date
         //
-        OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
+        OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
 
         // Listener set up that listens for changes in the customer table.
         //
@@ -169,10 +169,7 @@ public class OrdersBoard extends AppCompatActivity {
                 dbFarmRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
-                        Toast.makeText(OrdersBoard.this, "Timetable Updated", Toast.LENGTH_LONG).show();
-
-
+                        OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
                     }
 
                     @Override
@@ -180,27 +177,10 @@ public class OrdersBoard extends AppCompatActivity {
                         Log.d("error", error.toString());
                     }
                 });
-
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();  // Always call the superclass method first
-
-        EditText editTextDatePicker = findViewById(R.id.ordersBoardDatePicker);
-        Context context = this;
-        ListView listView = (ListView) findViewById(R.id.OrdersBoardListView);
-
-        Log.d("OrdersBoardServices onResume", "Reloading order page");
-
-
-        OrdersBoardServices.updateOrderBoardWithDate(editTextDatePicker.getText().toString(),context, listView);
-
     }
 }

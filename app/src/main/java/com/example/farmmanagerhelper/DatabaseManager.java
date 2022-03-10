@@ -195,6 +195,8 @@ public class DatabaseManager {
         Log.d("Database write: ","New customer " + product.getProductName()+ " from farm : "+ farmId );
     }
 
+    // takes the farm database reference and adds the order to the customer
+    //
     public static void addOrderToCustomer(Order order, String farmId, DatabaseReference dbFarmRef) {
 
         dbFarmRef.child("customers").child(order.getCustomer()).child(order.getProduct()).child("orders").child(order.getOrderID()).setValue(order);
@@ -205,6 +207,7 @@ public class DatabaseManager {
 
     // deletes the previous order and writes the new order in its place. It uses a an on success listener
     // to wait for the delete and then rewrite the new order with the same id
+    //
     public static void replaceOrderForCustomer(Order order, String farmId, DatabaseReference dbFarmRef) {
 
         dbFarmRef.child("customers").child(order.getCustomer()).child(order.getProduct()).child("orders")
@@ -215,5 +218,32 @@ public class DatabaseManager {
                 Log.d("Database write addOrderToCustomer","Updating " + order.getOrderID() + " in farm : "+ farmId );
             }
         });
+    }
+
+
+    // Takes a farm reference and navigates to customer and removes the order provided
+    //
+    public static void deleteOrderForCustomer(Order order, String farmId, DatabaseReference dbFarmRef) {
+        dbFarmRef.child("customers").child(order.getCustomer()).child(order.getProduct()).child("orders")
+                .child(order.getOrderID()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Database write deleteOrderForCustomer","Deleted " + order.getOrderID() + " in farm "+ farmId +" successfully.");
+            }
+        });
+    }
+
+
+    // Takes a database reference and of the customer table for the farm and an Object. It navigates down to the
+    // the object and and sets the value of orderComplete in the database to correspond with the Order object
+    //
+    public static void changeOrderCompleteStatusValue(DatabaseReference dbCustomerRef, Order order) {
+        dbCustomerRef.child(order.getCustomer()).child(order.getProduct()).child("orders").child(order.getOrderID()).child("orderComplete")
+                .setValue(order.isOrderComplete()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        @Override
+        public void onSuccess(Void aVoid) {
+            Log.d("Database write deleteOrderForCustomer","Updated " + order.getOrderID() + " to " + order.isOrderComplete());
+        }
+    });
     }
 }

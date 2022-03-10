@@ -84,6 +84,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         });
 
         // set up spinners to act as dropdown lists
+        //
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.blank_array, android.R.layout.simple_spinner_item);
 
@@ -142,7 +143,17 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                                 formSpinnerCustomers.getSelectedItem().toString(), formSpinnerProducts.getSelectedItem().toString(),
                                 formEditTextProductQuantity.getText().toString(), false);
 
-                        OrdersBoardServices.AddOrder(order,context);
+                        if(order.getQuantity().equals("0"))
+                        {
+                            // delete order
+                            //
+                            OrdersBoardServices.deleteOrder(order,context);
+                        }
+                        else
+                        {
+                            OrdersBoardServices.AddOrder(order,context);
+                        }
+
                         // reset the quantity value and product spinner
                         //
                         formEditTextProductQuantity.setText("");
@@ -157,7 +168,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
 
         // Listeners for adding new customer window
         // This listener disables inputs on all other editTexts and dropdowns and makes the view
-        // to add new customers visible
+        // to add new customers visible.
         //
         buttonAddNewCustomer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +214,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                 formEditTextProductQuantity.setEnabled(true);
 
                 // reset customer name field
+                //
                 EditTextAddNewCustomerName.setText("");
             }
         });
@@ -231,6 +243,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                         customer = new Customer(EditTextAddNewCustomerName.getText().toString());
 
                         // add customer
+                        //
                         OrdersBoardServices.addCustomerToFarmOrderBoard(context, customer,formSpinnerCustomers,spinnerAddProductCustomerName);
 
 
@@ -252,6 +265,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                         formEditTextProductQuantity.setEnabled(true);
 
                         // reset customer name field
+                        //
                         EditTextAddNewCustomerName.setText("");
 
                         break;
@@ -261,6 +275,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
         });
 
         // Buttons to open/close the add product to customer dialog
+        //
         buttonAddNewProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -307,6 +322,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                 formEditTextProductQuantity.setEnabled(true);
 
                 // reset Product name field
+                //
                 EditTextAddNewProductName.setText("");
             }
         });
@@ -378,7 +394,6 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                         break;
                     }
                 }
-
             }
         });
 
