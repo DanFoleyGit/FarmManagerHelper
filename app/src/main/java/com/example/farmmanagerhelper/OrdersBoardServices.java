@@ -72,37 +72,43 @@ public class OrdersBoardServices {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-        Log.d("OrderBardServices :", "In Function:" );
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
 
-                // get farmId from currentUser
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+                DatabaseReference dbFarmRef =  DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
 
-                // Check if the customer already exists, and if it does not add it.
-                //
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
 
+                        // Check if the customer already exists, and if it does not add it.
+                        //
+                        if (snapshot.child(customer.getCustomerName()).exists()) {
+                            Toast.makeText(context, "Customer already exists: "+ customer.getCustomerName(), Toast.LENGTH_SHORT).show();
+                            Log.d("OrderBardServices :", "Customer already exists: "+ customer.getCustomerName()  );
 
-                if (snapshot.child("farm_table").child(farmId).child("customers").child(customer.getCustomerName()).exists()) {
-                    Toast.makeText(context, "Customer already exists: "+ customer.getCustomerName(), Toast.LENGTH_SHORT).show();
-                    Log.d("OrderBardServices :", "Customer already exists: "+ customer.getCustomerName()  );
+                        }
+                        else
+                        {
+                            Toast.makeText(context, "Adding customer", Toast.LENGTH_SHORT).show();
+                            Log.d("OrderBardServices :", "Adding Customer: "+ customer.getCustomerName()  );
+                            DatabaseManager.addNewCustomerToFarmTable(customer,farmId);
+                            UpdateSpinnerWithCustomerNames(formSpinnerCustomers,context);
+                            UpdateSpinnerWithCustomerNames(spinnerAddProductCustomerName,context);
+                            UpdateSpinnerWithCustomerNames(spinnerDeleteCustomer,context);
 
-                }
-                else
-                {
-                    Toast.makeText(context, "Adding customer", Toast.LENGTH_SHORT).show();
-                    Log.d("OrderBardServices :", "Adding Customer: "+ customer.getCustomerName()  );
-                    DatabaseManager.addNewCustomerToFarmTable(customer,farmId);
-                    UpdateSpinnerWithCustomerNames(formSpinnerCustomers,context);
-                    UpdateSpinnerWithCustomerNames(spinnerAddProductCustomerName,context);
-                    UpdateSpinnerWithCustomerNames(spinnerDeleteCustomer,context);
+                        }
+                    }
 
-                }
-
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
             }
 
             @Override
@@ -114,45 +120,54 @@ public class OrdersBoardServices {
 
 
     // checks that a product does not exist in a customers table. if it does not it will add the
-    // product to that customer and then call UpdateSpinnerWithProductNames to update the porducts
+    // product to that customer and then call UpdateSpinnerWithProductNames to update the products
     // dropdown menu.
     //
-    public static void addNewProductToCustomers(Product product, Context context, Spinner spinnerAddOrder, Spinner spinnerDeleteProduct) {
+    public static void  addNewProductToCustomers(Product product, Context context, Spinner spinnerAddOrder, Spinner spinnerDeleteProduct) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("OrdersBoardServices ", "Updating Spinner ");
 
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
 
-                // get farmId from currentUser
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+                DatabaseReference dbFarmRef =  DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
 
-                // Check if the product already exists, and if it does, dont add it.
-                //
-                if (snapshot.child("farm_table").child(farmId).child("customers").child(product.getCustomerItBelongsTo())
-                        .child(product.getProductName()).exists()) {
-                    Toast.makeText(context, "Product already exists: "+ product.getProductName(), Toast.LENGTH_SHORT).show();
-                    Log.d("OrderBardServices :", "Customer already exists: "+ product.getProductName()  );
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        // Check if the product already exists, and if it does, dont add it.
+                        //
+                        if (snapshot.child(product.getCustomerItBelongsTo()).child(product.getProductName()).exists())
+                        {
+                            Toast.makeText(context, "Product already exists: "+ product.getProductName(), Toast.LENGTH_SHORT).show();
+                            Log.d("OrderBardServices :", "Customer already exists: "+ product.getProductName()  );
 
-                }
-                else
-                {
-                    Toast.makeText(context, "Adding customer", Toast.LENGTH_SHORT).show();
-                    Log.d("OrderBardServices :", "Adding Customer: "+ product.getProductName()  );
+                        }
+                        else
+                        {
+                            Toast.makeText(context, "Adding customer", Toast.LENGTH_SHORT).show();
+                            Log.d("OrderBardServices :", "Adding Customer: "+ product.getProductName()  );
 
-                    // add customer object to database
-                    DatabaseManager.addNewProductToCustomerTable(product,farmId);
+                            // add customer object to database
+                            DatabaseManager.addNewProductToCustomerTable(product,farmId);
 
-                    // once its added, it can update the two spinners. One in the main UI to add order
-                    // and one in the pop up to add a product
-                    //
-                    UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddOrder);
-                    UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerDeleteProduct);
-                }
+                            // once its added, it can update the two spinners. One in the main UI to add order
+                            // and one in the pop up to add a product
+                            //
+                            UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerAddOrder);
+                            UpdateSpinnerWithProductNames(product.getCustomerItBelongsTo(), context, spinnerDeleteProduct);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
             }
 
             @Override
@@ -160,45 +175,52 @@ public class OrdersBoardServices {
                 Log.d("error", error.toString());
             }
         });
-
-
     }
 
     // Get a list of customers from the database and populate the spinner
     //
     public static void UpdateSpinnerWithCustomerNames(Spinner spinner, Context context) {
-
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("OrdersBoardServices ", "Updating Spinner Customer");
 
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
-                String cust = "";
-                List<String> customers = new ArrayList<String>();
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
 
-                // get the farm id
-                //
-                Log.d("OrdersBoardServices ", "FarmId is " + farmId);
+                Log.d("OrdersBoardServices addOrder", "farm Id is " + farmId);
 
-                // get the customers that is stored in the customers and add them to a list to
-                // set as values for the drop down menu
-                //
-                for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("customers").getChildren()) {
-                    // add the users to the list
-                    cust = ds.getKey();
-                    customers.add(cust);
-                }
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
 
-                // create a new adapter which takes a list of takes customers to display
-                //
-                ArrayAdapter<String> spinnerUsersAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, customers);
-                spinner.setAdapter(spinnerUsersAdapter);
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String cust = "";
+                        List<String> customers = new ArrayList<String>();
+                        // get the customers that is stored in the customers and add them to a list to
+                        // set as values for the drop down menu
+                        //
+                        for (DataSnapshot ds : snapshot.child("customers").getChildren()) {
+                            // add the users to the list
+                            cust = ds.getKey();
+                            customers.add(cust);
+                        }
 
+                        // create a new adapter which takes a list of takes customers to display
+                        //
+                        ArrayAdapter<String> spinnerUsersAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, customers);
+                        spinner.setAdapter(spinnerUsersAdapter);
+
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
             }
 
             @Override
@@ -208,50 +230,60 @@ public class OrdersBoardServices {
         });
     }
 
-    // get a list of all the products
     static void UpdateSpinnerWithProductNames(String customer, Context context, Spinner spinner) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "Updating Spinner Product");
 
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
-                String prod = "";
-                List<String> productsList = new ArrayList<String>();
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
 
-                // get the farm id
-                //
-                Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "FarmId is " + farmId);
+                Log.d("OrdersBoardServices addOrder", "farm Id is " + farmId);
 
-                // get the products that is stored in the customer table that is gotten from the product
-                // object and add them to a list.
-                // needs to filter out the customerName field.
-                // set as values for the drop down menu
-                //
-                for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("customers")
-                        .child(customer).getChildren()) {
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
 
-                    if(!ds.getKey().equals("customerName"))
-                    {
-                        // add the products to the list
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String prod = "";
+                        List<String> productsList = new ArrayList<String>();
+
+                        // get the farm id
                         //
-                        prod = ds.getKey();
-                        productsList.add(prod);
+                        Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "FarmId is " + farmId);
+
+                        // get the products that is stored in the customer table that is gotten from the product
+                        // object and add them to a list.
+                        // needs to filter out the customerName field.
+                        // set as values for the drop down menu
+                        //
+                        for (DataSnapshot ds : snapshot.child("customers").child(customer).getChildren()) {
+                            if(!ds.getKey().equals("customerName"))
+                            {
+                                // add the products to the list
+                                //
+                                prod = ds.getKey();
+                                productsList.add(prod);
+                            }
+
+                        }
+
+                        Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "ProductList is " + productsList);
+
+                        // create a new adapter which takes a list of products to display
+                        //
+                        ArrayAdapter<String> spinnerUsersAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, productsList);
+                        spinner.setAdapter(spinnerUsersAdapter);
                     }
 
-                }
-
-                Log.d("OrdersBoardServices UpdateSpinnerWithProductNames", "ProductList is " + productsList);
-
-
-                // create a new adapter which takes a list of products to display
-                //
-                ArrayAdapter<String> spinnerUsersAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_dropdown_item, productsList);
-                spinner.setAdapter(spinnerUsersAdapter);
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
             }
 
             @Override
