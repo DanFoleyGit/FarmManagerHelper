@@ -16,7 +16,6 @@ import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.OrderBoardOrderItem;
 import com.example.farmmanagerhelper.models.Product;
-import com.example.farmmanagerhelper.models.TimeSlot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,26 +31,33 @@ public class OrdersBoardServices {
     // check if the user is the manager and if they are not, make the button visible to open
     // ManagerOrdersBoardOptions activity
     //
-    public static void makeOpenEditOrdersActivityVisibleForManagers(Button buttonOpenManagerOrdersBoardOptions) {
+    public static void makeManagerOrderBoardSettingsButtonVisible(Button buttonOpenManagerOrdersBoardOptions) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
 
-                // get farmId from currentUser
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
 
-                // Check if the currentUser Id matches the farms farmManager Value and make button visible
-                //
-                if (currentUser.getUid().equals(snapshot.child("farm_table").child(farmId).child("managerID").getValue().toString())) {
-                    buttonOpenManagerOrdersBoardOptions.setVisibility(View.VISIBLE);
-                }
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (currentUser.getUid().equals(snapshot.child("managerID").getValue().toString()))
+                        {
+                            buttonOpenManagerOrdersBoardOptions.setVisibility(View.VISIBLE);
+                        }
+                    }
 
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
             }
 
             @Override
@@ -432,7 +438,7 @@ public class OrdersBoardServices {
     // to read as complete or not ready.
     //
     //
-    public static void updateOrderBoardAndListViewOnClickListenerWithDate(String date, Context context, ListView listView) {
+    public static void updateOrderBoardAndListViewWithDate(String date, Context context, ListView listView) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 

@@ -425,6 +425,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                         buttonAddNewOrder.setVisibility(View.VISIBLE);
                         buttonAddNewCustomer.setVisibility((View.VISIBLE));
                         buttonAddNewProduct.setVisibility((View.VISIBLE));
+                        buttonOpenDeleteCustomerOrProducts.setVisibility((View.VISIBLE));
                         formEditTextDatePicker.setEnabled(true);
                         formSpinnerCustomers.setEnabled(true);
                         formSpinnerProducts.setEnabled(true);

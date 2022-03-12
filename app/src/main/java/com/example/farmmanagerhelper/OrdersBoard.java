@@ -50,7 +50,7 @@ public class OrdersBoard extends AppCompatActivity {
 
         // check if the user is manager and allow them to use the button to access manager only settings
         //
-        OrdersBoardServices.makeOpenEditOrdersActivityVisibleForManagers(buttonOpenManagerOrdersBoardOptions);
+        OrdersBoardServices.makeManagerOrderBoardSettingsButtonVisible(buttonOpenManagerOrdersBoardOptions);
 
         // SetDate to today's date
         //
@@ -106,7 +106,7 @@ public class OrdersBoard extends AppCompatActivity {
 
                 c.add(Calendar.DATE,1);
                 editTextDatePicker.setText(dateFormat.format(c.getTime()));
-                OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
+                OrdersBoardServices.updateOrderBoardAndListViewWithDate(editTextDatePicker.getText().toString(),context, listView);
 
             }
         });
@@ -129,7 +129,7 @@ public class OrdersBoard extends AppCompatActivity {
 
                 c.add(Calendar.DATE,-1);
                 editTextDatePicker.setText(dateFormat.format(c.getTime()));
-                OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
+                OrdersBoardServices.updateOrderBoardAndListViewWithDate(editTextDatePicker.getText().toString(),context, listView);
 
             }
         });
@@ -146,7 +146,7 @@ public class OrdersBoard extends AppCompatActivity {
 
         // get orders board for current date
         //
-        OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
+        OrdersBoardServices.updateOrderBoardAndListViewWithDate(editTextDatePicker.getText().toString(),context, listView);
 
         // Listener set up that listens for changes in the customer table.
         //
@@ -165,11 +165,11 @@ public class OrdersBoard extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 String farmId = snapshot.child("UserTableFarmId").getValue().toString();
-                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
-                dbFarmRef.addValueEventListener(new ValueEventListener() {
+                DatabaseReference dbCustRef =  DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
+                dbCustRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        OrdersBoardServices.updateOrderBoardAndListViewOnClickListenerWithDate(editTextDatePicker.getText().toString(),context, listView);
+                        OrdersBoardServices.updateOrderBoardAndListViewWithDate(editTextDatePicker.getText().toString(),context, listView);
                     }
 
                     @Override
