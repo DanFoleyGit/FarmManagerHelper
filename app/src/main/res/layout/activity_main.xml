@@ -22,6 +22,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.022" />
 
+    <ProgressBar
+        android:id="@+id/progressIconMainActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="140dp"
+        android:indeterminate="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        android:visibility="gone"/>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="241dp"
@@ -34,7 +46,7 @@
 
     <Button
         android:id="@+id/buttonOpenOrdersActivity"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:text="Orders"
@@ -45,7 +57,7 @@
 
     <Button
         android:id="@+id/buttonOpenTimetableActivity"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="92dp"
         android:text="Timetable"
@@ -55,11 +67,11 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
-        android:id="@+id/buttonOpenTool1Activity"
-        android:layout_width="wrap_content"
+        android:id="@+id/buttonOpenShioppingCalculatorActivity"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="188dp"
-        android:text="Tool1"
+        android:text="Pallet Count"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.263"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,10 +79,10 @@
 
     <Button
         android:id="@+id/buttonOpenTool2Activity"
-        android:layout_width="wrap_content"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="188dp"
-        android:text="tool2"
+        android:text="Produce Estimator"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.77"
         app:layout_constraintStart_toStartOf="parent"

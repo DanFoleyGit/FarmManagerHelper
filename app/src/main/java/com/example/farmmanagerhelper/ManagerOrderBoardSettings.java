@@ -275,7 +275,7 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
 
                         // add customer and update the 3 customer spinners after the database write
                         //
-                        OrdersBoardServices.addCustomerToFarmOrderBoard(context, customer,formSpinnerCustomers,spinnerAddProductCustomerName,spinnerDeleteCustomer);
+                        OrdersBoardServices.addCustomerToFarm(context, customer,formSpinnerCustomers,spinnerAddProductCustomerName,spinnerDeleteCustomer);
 
                         //enable components for adding new customer
                         //

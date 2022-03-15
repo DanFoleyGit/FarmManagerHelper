@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,12 @@ public class MainActivity extends AppCompatActivity {
     // Firebase
     private FirebaseAuth mAuth;
 
+    Button openTimetableActivity = null;
+    Button openOrdersBoard = null;
+    Button openShippingCalculator = null;
+    TextView UserEmail = null;
+    ProgressBar loadingIcon = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,9 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
 
         // UI
-        Button openTimetableActivity = findViewById(R.id.buttonOpenTimetableActivity);
-        Button openOrdersBoard = findViewById(R.id.buttonOpenOrdersActivity);
-        TextView UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
+        openTimetableActivity = findViewById(R.id.buttonOpenTimetableActivity);
+        openOrdersBoard = findViewById(R.id.buttonOpenOrdersActivity);
+        openShippingCalculator = findViewById(R.id.buttonOpenShioppingCalculatorActivity);
+        UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
+        loadingIcon = findViewById(R.id.progressIconMainActivity);
 
         // check if the user is logged. If they are go to the login activity and close main activity
         mAuth = FirebaseAuth.getInstance();
@@ -89,6 +98,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //
                 openOrdersBoardForUserType(currentUser);
+            }
+        });
+
+        openShippingCalculator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ShippingCalculator.class));
+
             }
         });
 
@@ -160,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
     // Menu Icon in top left
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -189,6 +207,29 @@ public class MainActivity extends AppCompatActivity {
 
         }
         return true;
+    }
+
+    // Disable the buttons to open new views
+    //
+    @Override
+    protected void onPause() {
+        super.onPause();
+        openTimetableActivity.setEnabled(false);
+        openOrdersBoard.setEnabled(false);
+        openShippingCalculator.setEnabled(false);
+        loadingIcon.setVisibility(View.VISIBLE);
+    }
+
+    // Enable the buttons
+    //
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        openTimetableActivity.setEnabled(true);
+        openOrdersBoard.setEnabled(true);
+        openShippingCalculator.setEnabled(true);
+        loadingIcon.setVisibility(View.GONE);
+
     }
 
     public void openTimetableForUserType(FirebaseUser currentUser) {

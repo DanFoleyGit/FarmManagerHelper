@@ -92,7 +92,7 @@ public class CreateFarm extends AppCompatActivity {
 
             // create farm object with current user id set as manager, and adding the users name to the list of users
             farm = new Farm(createFarmName.getText().toString(),createFarmPassCode.getText().toString(),
-                    "0001",firebaseUser.getUid(),"0001","0001", firebaseUser.getUid(),"none");
+                    firebaseUser.getUid(),"","", "","");
 
             if(isValid)
             {

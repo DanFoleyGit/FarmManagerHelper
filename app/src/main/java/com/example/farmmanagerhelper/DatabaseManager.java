@@ -1,5 +1,6 @@
 package com.example.farmmanagerhelper;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Spinner;
 
@@ -9,6 +10,7 @@ import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Farm;
 import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.Product;
+import com.example.farmmanagerhelper.models.ShippingCalculatorProfile;
 import com.example.farmmanagerhelper.models.TimetableTask;
 import com.example.farmmanagerhelper.models.User;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,6 +21,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseManager {
     //Firebase
@@ -274,6 +279,48 @@ public class DatabaseManager {
             public void onSuccess(Void aVoid) {
 
                 Log.d("Database write deleteProductFromCustomer","Delete Successful" );
+            }
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // functions in this section are to do with the Shipping calculator functionality
+    public static DatabaseReference getShippingCalcProfilesTableDatabaseReferenceByFarmName(String farmName)
+    {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName).child("shippingCalculatorProfiles");
+
+        return dbRef;
+    }
+
+    public static void addNewShippingCalcProfileToDatabase(ShippingCalculatorProfile profile, DatabaseReference dbShippingCalcRef) {
+
+        dbShippingCalcRef.child(profile.getProfileName()).setValue(profile).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Log.d("Database write addNewShippingCalcProfileToDatabase"," Adding new profile Successful" );
+            }
+        });
+    }
+
+    public static void updateShippingCalcProfileInDatabase(ShippingCalculatorProfile profile, DatabaseReference dbShippingCalcRef, Map<String, Object> postValues) {
+
+        dbShippingCalcRef.child(profile.getProfileName()).updateChildren(postValues).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Database write updateShippingCalcProfileInDatabase"," Update to profile Successful" );
+            }
+        });
+
+    }
+
+    public static void deleteShippingCalcProfileFromDatabase(String profileName, DatabaseReference dbShippingCalcRef) {
+        dbShippingCalcRef.child(profileName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Database write deleteShippingCalcProfileFromDatabase"," Profile delete Successful" );
             }
         });
     }

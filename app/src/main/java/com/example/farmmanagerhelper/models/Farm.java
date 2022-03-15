@@ -5,22 +5,19 @@ import java.util.ArrayList;
 public class Farm {
     public String farmName;
     public String farmPasscode;
-    public String farmID;
     public String managerID;
-    public String orderBoardID;
-    public String timeTableID;
     public String usersInFarm;
     public String customers;
+    public String shippingCalculatorProfiles;
+    public String produceEstimatorProfiles;
 
-    public Farm(String farmName, String farmPasscode, String farmID, String managerID, String orderBoardID, String timeTableID, String usersInFarm, String customers) {
+    public Farm(String farmName, String farmPasscode, String managerID, String usersInFarm, String customers, String shippingCalculatorProfiles, String produceEstimatorProfiles) {
         this.farmName = farmName;
         this.farmPasscode = farmPasscode;
-        this.farmID = farmID;
         this.managerID = managerID;
-        this.orderBoardID = orderBoardID;
-        this.timeTableID = timeTableID;
         this.usersInFarm = usersInFarm;
         this.customers = customers;
+        this.shippingCalculatorProfiles = shippingCalculatorProfiles;
+        this.produceEstimatorProfiles = produceEstimatorProfiles;
     }
-
 }

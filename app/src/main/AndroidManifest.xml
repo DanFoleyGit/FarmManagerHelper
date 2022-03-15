@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ManagerOrderBoardSettings"></activity>
+        <activity android:name=".ShippingCalculatorManagerProfiles"></activity>
+        <activity android:name=".ShippingCalculator" />
+        <activity android:name=".ManagerOrderBoardSettings" />
         <activity android:name=".OrdersBoard" />
         <activity android:name=".ManagerViewingStaffTimetable" />
         <activity android:name=".StaffTimetable" />

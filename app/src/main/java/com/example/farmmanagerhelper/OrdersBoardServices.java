@@ -67,8 +67,8 @@ public class OrdersBoardServices {
         });
     }
 
-    public static void addCustomerToFarmOrderBoard(Context context, Customer customer, Spinner formSpinnerCustomers,
-                                                   Spinner spinnerAddProductCustomerName, Spinner spinnerDeleteCustomer) {
+    public static void addCustomerToFarm(Context context, Customer customer, Spinner formSpinnerCustomers,
+                                         Spinner spinnerAddProductCustomerName, Spinner spinnerDeleteCustomer) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -243,9 +243,9 @@ public class OrdersBoardServices {
 
                 Log.d("OrdersBoardServices addOrder", "farm Id is " + farmId);
 
-                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
+                DatabaseReference dbCustRef =  DatabaseManager.getCustomerTableDatabaseReferenceByFarmName(farmId);
 
-                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                dbCustRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String prod = "";
@@ -260,7 +260,7 @@ public class OrdersBoardServices {
                         // needs to filter out the customerName field.
                         // set as values for the drop down menu
                         //
-                        for (DataSnapshot ds : snapshot.child("customers").child(customer).getChildren()) {
+                        for (DataSnapshot ds : snapshot.child(customer).getChildren()) {
                             if(!ds.getKey().equals("customerName"))
                             {
                                 // add the products to the list

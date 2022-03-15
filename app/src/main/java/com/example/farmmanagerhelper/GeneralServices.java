@@ -1,5 +1,6 @@
 package com.example.farmmanagerhelper;
 
+import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -51,4 +52,14 @@ public class GeneralServices {
     }
 
 
+    public static Boolean checkFirstIntIsNotGreaterThanSecondInt(int firstInt, int secondInt) {
+        if(firstInt>secondInt)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
 }
