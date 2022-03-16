@@ -38,7 +38,7 @@
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/editTextProduceEstimatorQuantityLayout"
+        android:id="@+id/editTextProduceEstimatorProfileNameLayout"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_margin="50dp"
@@ -50,7 +50,7 @@
         app:layout_constraintVertical_bias="0.15">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/editTextProduceEstimatorQuantity"
+            android:id="@+id/editTextProduceEstimatorProfileName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
@@ -60,7 +60,34 @@
             android:textSize="18sp"
             android:visibility="visible"/>
 
+
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextProduceEstimatorProfileSpinnerLayout"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_margin="50dp"
+        android:hint="Profile Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.15"
+        android:elevation="2dp"
+        android:visibility="gone">
+        <Spinner
+            android:id="@+id/spinnerProduceEstimatorProfileSpinner"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:theme="@style/CustomSpinnerTheme"
+            android:gravity="center"
+            android:spinnerMode="dialog"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/editTextProduceEstimatorWeightRawUnitsLayout"
@@ -154,6 +181,32 @@
             android:textAlignment="center"
             android:textSize="18sp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/ProduceEstimatorProfileErrorMsg"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text=""
+        android:textAlignment="center"
+        android:textColor="#FF0000"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextProduceEstimatorProductWasteMarginLayout" />
+
+    <RadioButton
+        android:id="@+id/radioConfirmDeleteProduceEstimatorProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginBottom="164dp"
+        android:checked="false"
+        android:text="Confirm Delete"
+        app:layout_constraintBottom_toTopOf="@+id/buttonProduceEstimatorProfileSubmit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="gone"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonProduceEstimatorProfileSubmit"

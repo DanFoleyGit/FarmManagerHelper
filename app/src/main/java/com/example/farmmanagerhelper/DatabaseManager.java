@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Farm;
 import com.example.farmmanagerhelper.models.Order;
+import com.example.farmmanagerhelper.models.ProduceEstimatorProfile;
 import com.example.farmmanagerhelper.models.Product;
 import com.example.farmmanagerhelper.models.ShippingCalculatorProfile;
 import com.example.farmmanagerhelper.models.TimetableTask;
@@ -317,6 +318,45 @@ public class DatabaseManager {
     }
 
     public static void deleteShippingCalcProfileFromDatabase(String profileName, DatabaseReference dbShippingCalcRef) {
+        dbShippingCalcRef.child(profileName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Database write deleteShippingCalcProfileFromDatabase"," Profile delete Successful" );
+            }
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // functions in this section are to do with the ProduceEstimator functionality
+
+    public static DatabaseReference getProduceEstimatorProfilesTableDatabaseReferenceByFarmName(String farmId) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //database.setPersistenceEnabled(true);
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmId).child("ProduceEstimatorProfiles");
+
+        return dbRef;
+    }
+
+    public static void addNewProduceEstimatorProfileToDatabase(ProduceEstimatorProfile profile, DatabaseReference dbShippingCalcRef) {
+        dbShippingCalcRef.child(profile.getProfileName()).setValue(profile).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Log.d("Database write addNewShippingCalcProfileToDatabase"," Adding new profile Successful" );
+            }
+        });
+    }
+
+    public static void updateProduceEstimatorProfileInDatabase(ProduceEstimatorProfile newProfile, DatabaseReference dbProduceEstimatorRef, Map<String, Object> postValues) {
+        dbProduceEstimatorRef.child(newProfile.getProfileName()).updateChildren(postValues).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Log.d("Database write updateProduceEstimatorProfileInDatabase"," Update to profile Successful" );
+            }
+        });
+    }
+
+    public static void deleteProduceEstimatorFromDatabase(String profileName, DatabaseReference dbShippingCalcRef) {
         dbShippingCalcRef.child(profileName).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {

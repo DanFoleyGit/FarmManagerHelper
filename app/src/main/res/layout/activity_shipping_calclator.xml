@@ -47,22 +47,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
-        android:id="@+id/editTextShippingCalcOrderQuantity"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="284dp"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLength="10"
-        android:background="#FFFFFF"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinnerShippingCalculatorProductProfile" />
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayout2"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_margin="50dp"
+        android:hint="Quantity"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.60">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextShippingCalcOrderQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+
+
+
+    </com.google.android.material.textfield.TextInputLayout>
     <TextView
         android:id="@+id/textViewShippingCalcFullPalletsQuantity"
         android:layout_width="wrap_content"
@@ -81,9 +94,12 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:text="calculate"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextShippingCalcOrderQuantity" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.72" />
 
     <Button
         android:id="@+id/buttonShippingCalcEditProfiles"

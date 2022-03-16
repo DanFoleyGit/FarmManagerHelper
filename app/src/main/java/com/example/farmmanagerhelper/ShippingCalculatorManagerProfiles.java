@@ -273,8 +273,8 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
                 {
                     // show form and hide confirm while resetting it
                     //
-                    radioConfirmDeleteShippingCalcProfile.setVisibility(View.GONE);
                     spinnerShippingCalcProfileNames.setVisibility(View.GONE);
+                    radioConfirmDeleteShippingCalcProfile.setVisibility(View.GONE);
                     radioConfirmDeleteShippingCalcProfile.setChecked(false);
 
                     editTextShippingCalcProfileName.setVisibility(View.VISIBLE);
@@ -292,7 +292,7 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
         spinnerShippingCalcProfileNames.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                ToolServices.updateParametersForProfileSelected(spinnerShippingCalcProfileNames.getSelectedItem().toString(), context,
+                ToolServices.updateShippingCalcParametersForProfileSelected(spinnerShippingCalcProfileNames.getSelectedItem().toString(), context,
                         editTextShippingCalcProfilePrefBoxes, editTextShippingCalcProfileMaxBoxes);
             }
 
