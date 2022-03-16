@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.farmmanagerhelper.models.Product;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     Button openTimetableActivity = null;
     Button openOrdersBoard = null;
     Button openShippingCalculator = null;
+    Button openProduceEstimator = null;
     TextView UserEmail = null;
     ProgressBar loadingIcon = null;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         openTimetableActivity = findViewById(R.id.buttonOpenTimetableActivity);
         openOrdersBoard = findViewById(R.id.buttonOpenOrdersActivity);
         openShippingCalculator = findViewById(R.id.buttonOpenShioppingCalculatorActivity);
+        openProduceEstimator = findViewById(R.id.buttonOpenProduceEstimator);
         UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
         loadingIcon = findViewById(R.id.progressIconMainActivity);
 
@@ -109,6 +112,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        openProduceEstimator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ProduceEstimator.class));
+            }
+        });
 
 
     }
@@ -217,6 +226,7 @@ public class MainActivity extends AppCompatActivity {
         openTimetableActivity.setEnabled(false);
         openOrdersBoard.setEnabled(false);
         openShippingCalculator.setEnabled(false);
+        openProduceEstimator.setEnabled(false);
         loadingIcon.setVisibility(View.VISIBLE);
     }
 
@@ -228,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         openTimetableActivity.setEnabled(true);
         openOrdersBoard.setEnabled(true);
         openShippingCalculator.setEnabled(true);
+        openProduceEstimator.setEnabled(true);
         loadingIcon.setVisibility(View.GONE);
 
     }
