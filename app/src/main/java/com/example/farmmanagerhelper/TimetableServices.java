@@ -322,6 +322,8 @@ public class TimetableServices {
                             // by 30 to find out how many slots it is on for. It will then loop X amount of time and set
                             // the timeslots to that task for the length of that task.
                             //
+
+                            //for (String anArray : array)
                             for(int i =0; i<timetable.size(); i++)
                             {
                                 TimeSlot currentSlot = timetable.get(i);

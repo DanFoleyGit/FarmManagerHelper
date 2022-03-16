@@ -120,7 +120,7 @@
 
     <Button
         android:id="@+id/buttonManagerOrderSettingsAddNewCustomerWindow"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Add New Customer"
@@ -131,7 +131,7 @@
 
     <Button
         android:id="@+id/buttonManagerOrderSettingsAddNewProduct"
-        android:layout_width="100dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:text="Add New Product"
