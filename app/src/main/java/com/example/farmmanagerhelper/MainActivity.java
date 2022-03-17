@@ -3,6 +3,7 @@ package com.example.farmmanagerhelper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,11 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.farmmanagerhelper.models.Product;
+import com.example.farmmanagerhelper.models.TimeSlot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,7 +25,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
+
+    Context context = this;
 
     // Firebase
     private FirebaseAuth mAuth;
@@ -31,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     Button openOrdersBoard = null;
     Button openShippingCalculator = null;
     Button openProduceEstimator = null;
+    ListView listView = null;
     TextView UserEmail = null;
     ProgressBar loadingIcon = null;
 
@@ -47,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
         openProduceEstimator = findViewById(R.id.buttonOpenProduceEstimator);
         UserEmail = findViewById(R.id.txtMainActivityLoggedInAsUserX);
         loadingIcon = findViewById(R.id.progressIconMainActivity);
+
+        listView = (ListView) findViewById(R.id.MainActivityTimeTableListView);
+
 
         // check if the user is logged. If they are go to the login activity and close main activity
         mAuth = FirebaseAuth.getInstance();
@@ -79,6 +94,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
+
+            // load the timetable and set it the current hour
+            //
+            loadTimeTable();
+
         }
 
 
@@ -120,6 +140,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void loadTimeTable() {
+
+        // get current date, load template and call updateMainMenuTimeTableWithTodaysDate to get data
+        //
+        String myFormat="dd/MM/yy";
+        SimpleDateFormat dateFormat = new SimpleDateFormat(myFormat, Locale.UK);
+        String todaysDate = dateFormat.format(new Date());
+
+        ArrayList<TimeSlot> timetable = TimetableServices.getTimeSlotTemplate();
+
+        TimetableListAdapter timetableAdapter = new TimetableListAdapter(context, R.layout.timetable_time_slot, timetable);
+        listView.setAdapter(timetableAdapter);
+
+        TimetableServices.updateMainMenuTimeTableWithTodaysDate(todaysDate, listView, context);
     }
 
     private void openOrdersBoardForUserType(FirebaseUser currentUser) {
