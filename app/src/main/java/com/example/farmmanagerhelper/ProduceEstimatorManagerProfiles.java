@@ -150,12 +150,14 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     if (isValid) {
 //                        Toast.makeText(ProduceEstimatorManagerProfiles.this, "Adding New Profile ", Toast.LENGTH_SHORT).show();
 
-                        ProduceEstimatorProfile profile = new ProduceEstimatorProfile(editTextProduceEstimatorProfileName.getText().toString(), null,
-                                editTextProduceEstimatorWeightRawUnits.getText().toString(), editTextProduceEstimatorWeightOfFinishedProducts.getText().toString(),
-                                editTextProduceEstimatorProductsPerFinishedUnit.getText().toString(), editTextProduceEstimatorProductWasteMargin.getText().toString());
 
                         if(radioProduceEstimatorAddShippingProfile.isChecked())
                         {
+                            ProduceEstimatorProfile profile = new ProduceEstimatorProfile(editTextProduceEstimatorProfileName.getText().toString(), null,
+                                    editTextProduceEstimatorWeightRawUnits.getText().toString(), editTextProduceEstimatorWeightOfFinishedProducts.getText().toString(),
+                                    editTextProduceEstimatorProductsPerFinishedUnit.getText().toString(), editTextProduceEstimatorProductWasteMargin.getText().toString());
+
+
                             ToolServices.addNewProduceEstimatorProfile(profile,context);
                             // update the spinner for profiles
                             //
@@ -164,6 +166,10 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
 
                         if(radioProduceEstimatorUpdateShippingProfile.isChecked())
                         {
+                            ProduceEstimatorProfile profile = new ProduceEstimatorProfile(spinnerProduceEstimatorProfileSpinner.getSelectedItem().toString(), null,
+                                    editTextProduceEstimatorWeightRawUnits.getText().toString(), editTextProduceEstimatorWeightOfFinishedProducts.getText().toString(),
+                                    editTextProduceEstimatorProductsPerFinishedUnit.getText().toString(), editTextProduceEstimatorProductWasteMargin.getText().toString());
+
                             Toast.makeText(ProduceEstimatorManagerProfiles.this, "Updating Profile ", Toast.LENGTH_SHORT).show();
                             ToolServices.updateProduceEstimatorProfile(profile,context);
 
@@ -264,8 +270,10 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     editTextProduceEstimatorProductsPerFinishedUnit.setText("");
                     editTextProduceEstimatorProductWasteMargin.setText("");
 
-                    editTextProduceEstimatorProfileName.setActivated(true);
-
+                    //set name to " " to make the banner smaller. This will be rest when add radio is called
+                    //
+                    editTextProduceEstimatorProfileName.setText(" ");
+                    
                     editTextProduceEstimatorProfileSpinnerLayout.setVisibility(View.VISIBLE);
                     radioConfirmDeleteProduceEstimatorProfile.setVisibility(View.VISIBLE);
                 }

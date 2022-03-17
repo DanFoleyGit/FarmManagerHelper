@@ -626,8 +626,10 @@ public class ToolServices {
 
                         // Check if the profile already exists, and if it does not add it.
                         //
+
                         if (snapshot.child(newProfile.getProfileName()).exists()) {
-                            Toast.makeText(context, "Updating Profile", Toast.LENGTH_SHORT).show();
+                            Log.d("ToolServices updateProduceEstimatorProfile:", "Updating Profile");
+
 
                             // create a hash map
                             //
@@ -791,6 +793,11 @@ public class ToolServices {
         float wFinProd = Integer.parseInt(profile.getWeightOfFinishedProduct());
         float numProdPerFinCrate = Integer.parseInt(profile.getNumProductsPerFinishedUnit());
         float margin = Float.parseFloat(convertMarginToPercentage) ;
+        Log.d("wRawUnit", " " + wRawUnit);
+        Log.d("wFinProd", " " + wFinProd);
+        Log.d("numProdPerFinCrate", " " + numProdPerFinCrate);
+        Log.d("margin", " " + margin);
+
 
 
         // Perform Calculation

@@ -97,4 +97,10 @@ public class ProduceEstimator extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ToolServices.updateSpinnerWithProduceEstimatorProfiles(spinnerProduceEstimatorSpinner,context);
+    }
 }
