@@ -259,9 +259,15 @@ public class TimetableServices {
                 // set as values for the drop down menu
                 //
                 for (DataSnapshot ds : snapshot.child("farm_table").child(farmId).child("usersInFarm").getChildren()) {
-                    // add the users to the list
-                    name = ds.child("name").getValue().toString();
-                    usersByName.add(name);
+
+                    // check if the user is currently in the farm to filter out users that have left the farm
+                    //
+                    if(ds.child("currentlyInFarm").getValue().toString().equals("true"))
+                    {
+                        // add the users to the list
+                        name = ds.child("name").getValue().toString();
+                        usersByName.add(name);
+                    }
                 }
 
                 // create a new adapter which takes a list of users and takes usersByName to display

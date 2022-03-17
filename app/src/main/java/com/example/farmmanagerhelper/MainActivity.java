@@ -214,6 +214,19 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 break;
 
+            // set up as a case statement to allow extra options if needed
+            case R.id.MenuLeaveFarm:
+                // sign out user
+
+                UserServices.leaveFarm();
+                Toast.makeText(MainActivity.this, "User signed out",
+                        Toast.LENGTH_SHORT).show();
+
+                // start login intent
+                startActivity(new Intent(MainActivity.this, JoinFarm.class));
+                finish();
+                break;
+
         }
         return true;
     }

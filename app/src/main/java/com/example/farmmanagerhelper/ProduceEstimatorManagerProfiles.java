@@ -273,7 +273,7 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     //set name to " " to make the banner smaller. This will be rest when add radio is called
                     //
                     editTextProduceEstimatorProfileName.setText(" ");
-                    
+
                     editTextProduceEstimatorProfileSpinnerLayout.setVisibility(View.VISIBLE);
                     radioConfirmDeleteProduceEstimatorProfile.setVisibility(View.VISIBLE);
                 }

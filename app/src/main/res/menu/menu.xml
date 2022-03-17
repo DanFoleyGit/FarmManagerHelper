@@ -8,4 +8,8 @@
         android:id="@+id/MenuLogout"
         android:title="@string/Logout" />
 
+    <item
+        android:id="@+id/MenuLeaveFarm"
+        android:title="@string/LeaveFarm" />
+
 </menu>

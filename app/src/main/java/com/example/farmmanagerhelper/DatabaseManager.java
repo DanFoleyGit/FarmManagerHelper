@@ -77,6 +77,14 @@ public class DatabaseManager {
 
     }
 
+    public static DatabaseReference getUsersInFarmDocumentByFarmName(String farmName) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference dbRef = database.getReference().child("farm_table").child(farmName).child("usersInFarm");
+
+        return dbRef;
+
+    }
+
     public static DatabaseReference getDatabaseRefForFarmName(String farmNameFromInput)
     {
 
@@ -139,6 +147,7 @@ public class DatabaseManager {
 
                 dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID);
                 dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).child("name").setValue(fullName);
+                dbRef.child("farm_table").child(farmName).child("usersInFarm").child(userID).child("currentlyInFarm").setValue(true);
 
                 Log.d("DatabaseManager AddFarmNameToUserAndUserToFarm",fullName + " added to farm");
             }
@@ -361,6 +370,27 @@ public class DatabaseManager {
             @Override
             public void onSuccess(Void aVoid) {
                 Log.d("Database write deleteShippingCalcProfileFromDatabase"," Profile delete Successful" );
+            }
+        });
+    }
+
+
+    public static void setFarmInUserToNone(DatabaseReference dbUsersRef) {
+        dbUsersRef.child("UserTableFarmId").setValue("none").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Log.d("Database write setFarmInUserToNone","Reset users farm back to none" );
+            }
+        });
+    }
+
+    public static void setCurrentlyInFarmToFalseForUser(DatabaseReference dbUsersInFarmRef, String uid) {
+        dbUsersInFarmRef.child(uid).child("currentlyInFarm").setValue("false").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+
+                Log.d("Database write setCurrentlyInFarmToFalseForUser","set currentlyInFarm to false for " + uid );
             }
         });
     }

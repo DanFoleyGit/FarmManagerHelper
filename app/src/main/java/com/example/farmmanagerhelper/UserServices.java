@@ -1,10 +1,12 @@
 package com.example.farmmanagerhelper;
 
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
+
+import com.example.farmmanagerhelper.models.Order;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -12,6 +14,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 
@@ -91,4 +94,53 @@ public class UserServices {
     }
 
 
+    // Sets the users farm back to "none and changes the value of currentlyInFarm to false in
+    // farm_table/farmName/usersInFarm/userId/currentlyInFarm
+    //
+    public static void leaveFarm() {
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        // get the farm id
+        //
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+                Log.d("OrdersBoardServices updateOrderBoardWithDate", "farm Id is " + farmId);
+
+
+                Log.d("farmname is "," "+ farmId);
+
+                DatabaseReference dbUsersInFarmRef = DatabaseManager.getUsersInFarmDocumentByFarmName(farmId);
+
+                DatabaseManager.setFarmInUserToNone(dbRef);
+
+
+                Log.d("farmname is "," "+ dbUsersInFarmRef);
+
+
+                dbUsersInFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        DatabaseManager.setCurrentlyInFarmToFalseForUser(dbUsersInFarmRef, currentUser.getUid());
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("error", error.toString());
+            }
+        });
+    }
 }
