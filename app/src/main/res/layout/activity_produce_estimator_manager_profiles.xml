@@ -9,33 +9,36 @@
 
     <RadioGroup
         android:id="@+id/radioGroupProduceEstimator"
-        android:layout_width="137dp"
-        android:layout_height="140dp"
+        android:layout_width="194dp"
+        android:layout_height="137dp"
         android:layout_marginTop="16dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.744"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
             android:id="@+id/radioProduceEstimatorAddShippingProfile"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Add New Profile" />
+            android:text="Add New Profile"
+            android:textSize="18sp" />
 
         <RadioButton
             android:id="@+id/radioProduceEstimatorUpdateShippingProfile"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="Existing profile" />
+            android:layout_height="wrap_content"
+            android:text="Existing profile"
+            android:textSize="18sp" />
 
         <RadioButton
             android:id="@+id/radioProduceEstimatorDeleteShippingCalcProfile"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:text="Delete Profile" />
+            android:layout_height="wrap_content"
+            android:text="Delete Profile"
+            android:textSize="18sp" />
     </RadioGroup>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -48,21 +51,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15">
+        app:layout_constraintVertical_bias="0.15"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextProduceEstimatorProfileName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:textAlignment="center"
             android:inputType="text"
             android:maxLines="1"
             android:textSize="18sp"
             android:visibility="visible"/>
-
-
-
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -100,13 +100,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.30">
+        app:layout_constraintVertical_bias="0.30"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextProduceEstimatorWeightRawUnits"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:textAlignment="center"
             android:inputType="number"
             android:maxLines="1"
@@ -123,13 +123,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45">
+        app:layout_constraintVertical_bias="0.45"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextProduceEstimatorWeightOfFinishedProducts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:textAlignment="center"
             android:inputType="number"
             android:maxLines="1"
@@ -146,13 +146,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.60">
+        app:layout_constraintVertical_bias="0.60"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextProduceEstimatorProductsPerFinishedUnit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:textAlignment="center"
             android:inputType="number"
             android:maxLines="1"
@@ -169,13 +169,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75">
+        app:layout_constraintVertical_bias="0.75"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/editTextProduceEstimatorProductWasteMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:inputType="number"
             android:maxLines="1"
             android:maxLength="2"

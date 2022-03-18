@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -28,6 +29,7 @@ public class ProduceEstimator extends AppCompatActivity {
     Spinner spinnerProduceEstimatorSpinner = null;
     TextView ProduceEstimatorErrorMsg = null;
     TextView textViewProduceEstimatorResult = null;
+    TextView TextInputLayoutDummySpinnerText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class ProduceEstimator extends AppCompatActivity {
         spinnerProduceEstimatorSpinner = findViewById(R.id.spinnerProduceEstimatorSpinner);
         ProduceEstimatorErrorMsg = findViewById(R.id.ProduceEstimatorErrorMsg);
         textViewProduceEstimatorResult = findViewById(R.id.textViewProduceEstimatorResult);
+        TextInputLayoutDummySpinnerText = findViewById(R.id.TextInputLayoutDummySpinnerText);
+
+        TextInputLayoutDummySpinnerText.setEnabled(false);
 
         ToolServices.makeOptionsButtonVisibleForManager(currentUser, buttonProduceEstimatorEditProfiles);
 
@@ -92,6 +97,24 @@ public class ProduceEstimator extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(ProduceEstimator.this, ProduceEstimatorManagerProfiles.class));
+
+            }
+        });
+
+        // sets that if there is an item in the list, it will animate the dummy text box that the
+        // spinner sits in
+        //
+        spinnerProduceEstimatorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(spinnerProduceEstimatorSpinner.getSelectedItem() != null)
+                {
+                    TextInputLayoutDummySpinnerText.setText(" ");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });

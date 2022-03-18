@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.farmmanagerhelper.models.ShippingCalculatorProfile;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -26,9 +27,10 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
 
-    private TextView textViewShippingCalcProfileNameTag = null;
-    private TextView textViewShippingCalcProfilePrefBoxesTag = null;
-    private TextView textViewShippingCalcProfileMaxBoxesTag = null;
+    private TextInputLayout textViewShippingCalcProfileNameTag = null;
+    private TextInputLayout textViewShippingCalcProfilePrefBoxesTag = null;
+    private TextInputLayout textViewShippingCalcProfileMaxBoxesTag = null;
+    private TextInputLayout spinnerShippingCalcProfileNamesLayout = null;
     private EditText editTextShippingCalcProfileName = null;
     private EditText editTextShippingCalcProfilePrefBoxes = null;
     private EditText editTextShippingCalcProfileMaxBoxes = null;
@@ -47,9 +49,10 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipping_calculator_manager_profiles);
 
-        textViewShippingCalcProfileNameTag = findViewById(R.id.textViewViewShippingCalcProfileNameTag);
-        textViewShippingCalcProfilePrefBoxesTag = findViewById(R.id.textViewShippingCalcProfilePrefBoxesTag);
-        textViewShippingCalcProfileMaxBoxesTag =findViewById(R.id.textViewShippingCalcProfileMaxBoxesTag);
+        textViewShippingCalcProfileNameTag = findViewById(R.id.editTextTextShippingCalcProfileNameLayout);
+        textViewShippingCalcProfilePrefBoxesTag = findViewById(R.id.editTextTextShippingCalcProfilePrefBoxesLayout);
+        textViewShippingCalcProfileMaxBoxesTag =findViewById(R.id.editTextTextShippingCalcProfileMaxBoxesLayout);
+        spinnerShippingCalcProfileNamesLayout = findViewById(R.id.spinnerShippingCalcProfileNamesLayout);
 
         editTextShippingCalcProfileName = findViewById(R.id.editTextTextShippingCalcProfileName);
         editTextShippingCalcProfilePrefBoxes = findViewById(R.id.editTextTextShippingCalcProfilePrefBoxes);
@@ -207,11 +210,12 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
 
                         // reset to add new profile state
                         //
+                        editTextShippingCalcProfileName.setEnabled(true);
                         editTextShippingCalcProfileName.setText("");
                         editTextShippingCalcProfilePrefBoxes.setText("");
                         editTextShippingCalcProfileMaxBoxes.setText("");
                         radioAddShippingProfile.setChecked(true);
-                        spinnerShippingCalcProfileNames.setVisibility(View.GONE);
+                        spinnerShippingCalcProfileNamesLayout.setVisibility(View.GONE);
                         editTextShippingCalcProfileName.setVisibility(View.VISIBLE);
 
                         break;
@@ -224,20 +228,23 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
         radioAddShippingProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextShippingCalcProfileName.setVisibility(View.VISIBLE);
+                editTextShippingCalcProfileName.setEnabled(false);
                 editTextShippingCalcProfileName.setText("");
                 editTextShippingCalcProfilePrefBoxes.setText("");
                 editTextShippingCalcProfileMaxBoxes.setText("");
 
-                spinnerShippingCalcProfileNames.setVisibility(View.GONE);
+                spinnerShippingCalcProfileNamesLayout.setVisibility(View.GONE);
             }
         });
 
         radioUpdateShippingProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextShippingCalcProfileName.setVisibility(View.GONE);
-                spinnerShippingCalcProfileNames.setVisibility(View.VISIBLE);
+                editTextShippingCalcProfileName.setEnabled(false);
+                editTextShippingCalcProfileName.setText(" ");
+
+                spinnerShippingCalcProfileNamesLayout.setVisibility(View.VISIBLE);
+//                spinnerShippingCalcProfileNames.setVisibility(View.VISIBLE);
                 ToolServices.updateSpinnerWithShippingCalcProfiles(spinnerShippingCalcProfileNames, context);
             }
         });
@@ -255,32 +262,30 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
                 {
                     // hide the main form and make the spinner and confirm delete button visible
                     //
-                    editTextShippingCalcProfileName.setVisibility(View.GONE);
                     editTextShippingCalcProfilePrefBoxes.setVisibility(View.GONE);
                     editTextShippingCalcProfileMaxBoxes.setVisibility(View.GONE);
-                    textViewShippingCalcProfileNameTag.setVisibility(View.GONE);
                     textViewShippingCalcProfilePrefBoxesTag.setVisibility(View.GONE);
                     textViewShippingCalcProfileMaxBoxesTag.setVisibility(View.GONE);
-                    editTextShippingCalcProfileName.setText("");
+                    editTextShippingCalcProfileName.setText(" ");
                     editTextShippingCalcProfilePrefBoxes.setText("");
                     editTextShippingCalcProfileMaxBoxes.setText("");
 
                     radioConfirmDeleteShippingCalcProfile.setVisibility(View.VISIBLE);
-                    spinnerShippingCalcProfileNames.setVisibility(View.VISIBLE);
+                    spinnerShippingCalcProfileNamesLayout.setVisibility(View.VISIBLE);
 
                 }
                 else
                 {
                     // show form and hide confirm while resetting it
                     //
-                    spinnerShippingCalcProfileNames.setVisibility(View.GONE);
+                    editTextShippingCalcProfileName.setEnabled(false);
+                    editTextShippingCalcProfileName.setText(" ");
                     radioConfirmDeleteShippingCalcProfile.setVisibility(View.GONE);
                     radioConfirmDeleteShippingCalcProfile.setChecked(false);
 
                     editTextShippingCalcProfileName.setVisibility(View.VISIBLE);
                     editTextShippingCalcProfilePrefBoxes.setVisibility(View.VISIBLE);
                     editTextShippingCalcProfileMaxBoxes.setVisibility(View.VISIBLE);
-                    textViewShippingCalcProfileNameTag.setVisibility(View.VISIBLE);
                     textViewShippingCalcProfilePrefBoxesTag.setVisibility(View.VISIBLE);
                     textViewShippingCalcProfileMaxBoxesTag.setVisibility(View.VISIBLE);
                 }

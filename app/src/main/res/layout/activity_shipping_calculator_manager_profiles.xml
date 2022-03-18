@@ -4,19 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#364CAF50"
     tools:context=".ShippingCalculatorManagerProfiles">
 
 
-    <TextView
-        android:id="@+id/textViewShippingCalcProfileMaxBoxesTag"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:text="Max Boxes Per Pallet"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.026"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewShippingCalcProfilePrefBoxesTag" />
+
 
     <RadioGroup
         android:id="@+id/radioGroup"
@@ -34,19 +26,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="Add New Profile" />
+            android:text="Add New Profile"
+            android:textSize="18sp"/>
 
         <RadioButton
             android:id="@+id/radioUpdateShippingProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Existing profile" />
+            android:text="Existing profile"
+            android:textSize="18sp"/>
 
         <RadioButton
             android:id="@+id/radioDeleteShippingCalcProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete Profile" />
+            android:text="Delete Profile"
+            android:textSize="18sp"/>
     </RadioGroup>
 
     <RadioButton
@@ -61,18 +56,112 @@
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
         android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/editTextTextShippingCalcProfileMaxBoxes"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="220dp"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLength="10"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextTextShippingCalcProfileMaxBoxesLayout"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_margin="50dp"
+        android:hint="Max Boxes Per Pallet"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.781"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.70"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTextShippingCalcProfileMaxBoxes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextTextShippingCalcProfileNameLayout"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_margin="50dp"
+        android:hint="Profile Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.30"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTextShippingCalcProfileName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/spinnerShippingCalcProfileNamesLayout"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_margin="50dp"
+        android:hint="Profile Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.30"
+        android:elevation="2dp"
+        android:visibility="gone"
+        >
+
+        <Spinner
+            android:id="@+id/spinnerShippingCalcProfileNames"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:spinnerMode="dialog"
+            android:textSize="18sp" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/editTextTextShippingCalcProfilePrefBoxesLayout"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:layout_width="250dp"
+        android:layout_height="60dp"
+        android:layout_margin="50dp"
+        android:hint="Preferred Boxes Per Pallet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.50"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextTextShippingCalcProfilePrefBoxes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:inputType="number"
+            android:maxLines="1"
+            android:textSize="18sp"
+            android:visibility="visible"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
 
     <TextView
         android:id="@+id/ShippingCalcProfileErrorMsg"
@@ -88,75 +177,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-    <EditText
-        android:id="@+id/editTextTextShippingCalcProfileName"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:maxLength="40"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.781"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <Spinner
-        android:id="@+id/spinnerShippingCalcProfileNames"
-        android:layout_width="200dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="32dp"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.772"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/textViewViewShippingCalcProfileNameTag"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:text="Name"
-        app:layout_constraintEnd_toStartOf="@+id/radioGroup"
-        app:layout_constraintHorizontal_bias="0.344"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <EditText
-        android:id="@+id/editTextTextShippingCalcProfilePrefBoxes"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="128dp"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLength="10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.805"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
-
-    <TextView
-        android:id="@+id/textViewShippingCalcProfilePrefBoxesTag"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="76dp"
-        android:text="Preferred Boxes Per Pallet"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewViewShippingCalcProfileNameTag" />
-
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonShippingCalcAddProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="364dp"
         android:text="Add New Product Profile"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
 </androidx.constraintlayout.widget.ConstraintLayout>

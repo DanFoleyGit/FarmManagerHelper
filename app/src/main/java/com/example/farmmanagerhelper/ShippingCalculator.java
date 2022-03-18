@@ -31,6 +31,7 @@ public class ShippingCalculator extends AppCompatActivity {
     private TextView textViewShippingCalcRemainderPalletQuantityTag;
     private TextView textViewShippingCalcRemainderPalletsQuantity;
     private TextView ShippingCalcErrorMsg = null;
+    private TextView TextInputLayoutDummyShippingCalcSpinnerText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +51,11 @@ public class ShippingCalculator extends AppCompatActivity {
         textViewShippingCalcFullPalletsQuantity = findViewById(R.id.textViewShippingCalcFullPalletsQuantity);
 //        textViewShippingCalcRemainderPalletQuantityTag = findViewById(R.id.textViewShippingCalcRemainderPalletQuantityTag);
         textViewShippingCalcRemainderPalletsQuantity = findViewById(R.id.textViewShippingCalcRemainderPalletsQuantity);
+        TextInputLayoutDummyShippingCalcSpinnerText = findViewById(R.id.TextInputLayoutDummyShippingCalcSpinnerText);
         ShippingCalcErrorMsg = findViewById(R.id.ShippingCalcErrorMsg);
 
         buttonShippingCalcEditProfiles.setEnabled(false);
+        TextInputLayoutDummyShippingCalcSpinnerText.setEnabled(false);
 
 
         ToolServices.makeOptionsButtonVisibleForManager(currentUser, buttonShippingCalcEditProfiles);
@@ -110,6 +113,11 @@ public class ShippingCalculator extends AppCompatActivity {
                 editTextShippingCalcOrderQuantity.setText("");
                 textViewShippingCalcFullPalletsQuantity.setText("_ pallets by __ units");
                 textViewShippingCalcRemainderPalletsQuantity.setText("_ pallets by __");
+
+                if(spinnerShippingCalculatorProductProfile.getSelectedItem() != null)
+                {
+                    TextInputLayoutDummyShippingCalcSpinnerText.setText(" ");
+                }
             }
 
             @Override
