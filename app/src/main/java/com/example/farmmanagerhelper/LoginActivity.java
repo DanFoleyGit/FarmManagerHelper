@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,14 @@ public class LoginActivity extends AppCompatActivity {
 
     //firebase auth
     private FirebaseAuth mAuth;
+
+    EditText loginEmail = null;
+    EditText loginPassword = null;
+    TextView loginErrorMsg = null;
+    Button buttonOpenRegisterAccountActivity = null;
+    Button buttonLogUserIn = null;
+    ProgressBar progressIconLogin = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -33,12 +42,17 @@ public class LoginActivity extends AppCompatActivity {
         // FireBase
         mAuth = FirebaseAuth.getInstance();
 
-        // UI button components
-        Button openRegisterAccountActivity = findViewById((R.id.btnRegisterNewUserAcitivty));
-        Button logUserIn = findViewById(R.id.btnLoginUser);
+        // UI text components and error message
+        //
+        loginEmail = findViewById(R.id.EditTextLoginEmail);
+        loginPassword = findViewById(R.id.EditTextLoginPassword);
+        loginErrorMsg = findViewById(R.id.txtLoginErrorMsg);
+        buttonOpenRegisterAccountActivity = findViewById((R.id.btnRegisterNewUserAcitivty));
+        buttonLogUserIn = findViewById(R.id.btnLoginUser);
+        progressIconLogin = findViewById(R.id.progressIconLogin);
 
         // listener to open registration view
-        openRegisterAccountActivity.setOnClickListener(new View.OnClickListener() {
+        buttonOpenRegisterAccountActivity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Class activityClass = com.example.farmmanagerhelper.RegisterAccountActivity.class;
@@ -50,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //log in user button
-        logUserIn.setOnClickListener(new View.OnClickListener() {
+        buttonLogUserIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginAccount();
@@ -82,10 +96,7 @@ public class LoginActivity extends AppCompatActivity {
             // variables
             boolean isValid = true;
 
-            // UI text components and error message
-            EditText loginEmail = findViewById(R.id.EditTextLoginEmail);
-            EditText loginPassword =findViewById(R.id.EditTextLoginPassword);
-            TextView loginErrorMsg = findViewById(R.id.txtLoginErrorMsg);
+            loadingState();
 
             // call validation
             while(isValid)
@@ -94,27 +105,27 @@ public class LoginActivity extends AppCompatActivity {
                 if(isValid == false)
                 {
                     loginErrorMsg.setText("All fields Are Required");
+                    activeState();
                     break;
                 }
-
                 loginErrorMsg.setText("");
 
                 isValid = UserServices.validateEmail(loginEmail);
                 if(isValid == false)
                 {
                     loginErrorMsg.setText("Email not in correct format");
+                    activeState();
                     break;
                 }
-
                 loginErrorMsg.setText("");
 
                 isValid = UserServices.checkPasswordLength(loginPassword);
                 if(isValid == false)
                 {
                     loginErrorMsg.setText("Passwords must be at least 8 characters");
+                    activeState();
                     break;
                 }
-
                 loginErrorMsg.setText("");
 
                 // call login user
@@ -151,9 +162,45 @@ public class LoginActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
 
                             LoginErrorMsg.setText("Failed to login");
+                            activeState();
                         }
                     }
                 });
         }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        loadingState();
+    }
+
+    // Enable the buttons
+    //
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activeState();
+    }
+
+    // Disable the buttons to open new views
+    //
+    private void loadingState()
+    {
+        buttonLogUserIn.setEnabled(false);
+        buttonOpenRegisterAccountActivity.setEnabled(false);
+
+        progressIconLogin.setVisibility(View.VISIBLE);
+    }
+
+    // Enable the buttons
+    //
+    private void activeState()
+    {
+        buttonLogUserIn.setEnabled(true);
+        buttonOpenRegisterAccountActivity.setEnabled(true);
+
+        progressIconLogin.setVisibility(View.GONE);
+    }
 
 }

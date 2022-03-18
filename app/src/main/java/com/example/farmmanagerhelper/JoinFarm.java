@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,13 +21,18 @@ import com.google.firebase.database.ValueEventListener;
 
 public class JoinFarm extends AppCompatActivity {
 
+    Button joinFarmButton = null;
+    Button createFarmActivity = null;
+    ProgressBar progressBar = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_farm);
 
-        Button joinFarmButton = findViewById(R.id.buttonJoinFarm);
-        Button createFarmActivity = findViewById(R.id.buttonOpenCreateFarmActivity);
+        joinFarmButton = findViewById(R.id.buttonJoinFarm);
+        createFarmActivity = findViewById(R.id.buttonOpenCreateFarmActivity);
+        progressBar = findViewById(R.id.progressIconJoinFarm);
 
 
         joinFarmButton.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +66,10 @@ public class JoinFarm extends AppCompatActivity {
 
         boolean isValid = true;
 
+        // set to loading state
+        //
+        loadingState();
+
         Log.d("JoinFarm validation :","Beginning");
         while(isValid) {
 
@@ -68,16 +78,22 @@ public class JoinFarm extends AppCompatActivity {
             {
                 Log.d("JoinFarm validation :","empty inputs");
                 joinFarmErrorMessage.setText("Inputs must be filled in");
+                activeState();
                 break;
             }
+            joinFarmErrorMessage.setText("");
+
 
             isValid = (FarmService.InputsDontContainWhiteSpaces(joinFarmName.getText().toString(),joinFarmPassCode.getText().toString()));
             if(!isValid)
             {
                 Log.d("CreateFarm validation :","Name or pass code has white spaces");
                 joinFarmErrorMessage.setText("Name and Passcode cant have spaces");
+                activeState();
                 break;
             }
+            joinFarmErrorMessage.setText("");
+
 
             if(isValid)
             {
@@ -108,10 +124,15 @@ public class JoinFarm extends AppCompatActivity {
                             else
                             {
                                 Log.d("JoinFarm passCode was wrong for the farm :", joinFarmPassCode.getText().toString());
+                                activeState();
+                                joinFarmErrorMessage.setText("Farm name or pass code is incorrect");
+
                             }
                         }
                         else{
                             Log.d("JoinFarm did not find farm in db :", joinFarmName.getText().toString());
+                            activeState();
+                            joinFarmErrorMessage.setText("Farm name or pass code is incorrect");
                         }
                     }
 
@@ -121,12 +142,46 @@ public class JoinFarm extends AppCompatActivity {
                     }
                 });
 
-                joinFarmErrorMessage.setText("Farm name or pass code is incorrect");
-
                 break;
             }
         }
 
 
+    }
+
+    // Disable the buttons to open new views
+    //
+    @Override
+    protected void onPause() {
+        super.onPause();
+        loadingState();
+    }
+
+    // Enable the buttons
+    //
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activeState();
+    }
+
+    // Disable the buttons to open new views
+    //
+    private void loadingState()
+    {
+        joinFarmButton.setEnabled(false);
+        createFarmActivity.setEnabled(false);
+
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    // Enable the buttons
+    //
+    private void activeState()
+    {
+        joinFarmButton.setEnabled(true);
+        createFarmActivity.setEnabled(true);
+
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.farmmanagerhelper.models.Farm;
@@ -21,14 +22,36 @@ import com.google.firebase.database.ValueEventListener;
 
 public class CreateFarm extends AppCompatActivity {
 
+
+    //firebase
+    FirebaseAuth mAuth = null;
+    FirebaseUser firebaseUser = null;
+
+    Button createFarmButton = null;
+    Button joinFarmActivity = null;
+    EditText createFarmName = null;
+    EditText createFarmPassCode = null;
+    TextView createFarmErrorMessage = null;
+    ProgressBar progressIconCreateFarm = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_farm);
 
+        //firebase
+        //
+        mAuth = FirebaseAuth.getInstance();
+        firebaseUser = mAuth.getCurrentUser();
+
         // UI
-        Button createFarmButton = findViewById(R.id.buttonCreateFarm);
-        Button joinFarmActivity = findViewById(R.id.buttonJoinFarmActivity);
+        //
+        createFarmButton = findViewById(R.id.buttonCreateFarm);
+        joinFarmActivity = findViewById(R.id.buttonJoinFarmActivity);
+        createFarmName = findViewById(R.id.editTextCreateFarmName);
+        createFarmPassCode = findViewById(R.id.editTextCreateFarmPasscode);
+        createFarmErrorMessage = findViewById(R.id.createFarmErrorMessage);
+        progressIconCreateFarm = findViewById(R.id.progressIconCreateFarm);
 
 
         createFarmButton.setOnClickListener(new View.OnClickListener() {
@@ -36,7 +59,6 @@ public class CreateFarm extends AppCompatActivity {
             public void onClick(View view) {
 
                 addFarmToDatabase();
-
             }
         });
 
@@ -53,20 +75,16 @@ public class CreateFarm extends AppCompatActivity {
     }
 
     private void addFarmToDatabase() {
-        // UI
-        EditText createFarmName = findViewById(R.id.editTextCreateFarmName);
-        EditText createFarmPassCode = findViewById(R.id.editTextCreateFarmPasscode);
-        TextView createFarmErrorMessage = findViewById(R.id.createFarmErrorMessage);
-
-
-        //firebase
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        FirebaseUser firebaseUser = mAuth.getCurrentUser();
 
         // model
+        //
         Farm farm;
 
         boolean isValid = true;
+
+        // set UI to loading state
+        //
+        loadingState();
 
         Log.d("CreateFarm validation :","Beginning");
         while(isValid)
@@ -76,6 +94,7 @@ public class CreateFarm extends AppCompatActivity {
             {
                 Log.d("CreateFarm validation :","empty inputs");
                 createFarmErrorMessage.setText("Inputs must be filled in");
+                activeState();
                 break;
             }
             createFarmErrorMessage.setText("");
@@ -87,10 +106,13 @@ public class CreateFarm extends AppCompatActivity {
             {
                 Log.d("CreateFarm validation :","name or passcode has whitepsaces");
                 createFarmErrorMessage.setText("Name and Passcode cant have spaces");
+                activeState();
                 break;
             }
+            createFarmErrorMessage.setText("");
 
             // create farm object with current user id set as manager, and adding the users name to the list of users
+            //
             farm = new Farm(createFarmName.getText().toString(),createFarmPassCode.getText().toString(),
                     firebaseUser.getUid(),"","", "","");
 
@@ -115,6 +137,11 @@ public class CreateFarm extends AppCompatActivity {
                             startActivity(new Intent(CreateFarm.this, MainActivity.class));
                             finish();
                         }
+                        else
+                        {
+                            createFarmErrorMessage.setText("Farm already exists.");
+                            activeState();
+                        }
 
                     }
 
@@ -133,6 +160,47 @@ public class CreateFarm extends AppCompatActivity {
         }
 
 
+    }
+
+
+    // Disable the buttons to open new views
+    //
+    @Override
+    protected void onPause() {
+        super.onPause();
+        loadingState();
+    }
+
+    // Enable the buttons
+    //
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activeState();
+    }
+
+    // Disable the buttons to open new views
+    //
+    private void loadingState()
+    {
+        createFarmButton.setEnabled(false);
+        joinFarmActivity.setEnabled(false);
+        createFarmName.setEnabled(false);
+        createFarmPassCode.setEnabled(false);
+
+        progressIconCreateFarm.setVisibility(View.VISIBLE);
+    }
+
+    // Enable the buttons
+    //
+    private void activeState()
+    {
+        createFarmButton.setEnabled(true);
+        joinFarmActivity.setEnabled(true);
+        createFarmName.setEnabled(true);
+        createFarmPassCode.setEnabled(true);
+
+        progressIconCreateFarm.setVisibility(View.GONE);
     }
 
 }

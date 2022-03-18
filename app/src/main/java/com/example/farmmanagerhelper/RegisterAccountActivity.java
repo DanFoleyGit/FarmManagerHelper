@@ -1,12 +1,12 @@
 package com.example.farmmanagerhelper;
 
-import android.app.usage.NetworkStats;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +29,17 @@ public class RegisterAccountActivity extends AppCompatActivity {
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference dbRef = database.getReference();
 
+    // UI
+    EditText editTextRegisterEmail = null;
+    EditText editTextRegisterPassword = null;
+    EditText editTextRegisterPasswordConfirm = null;
+    EditText editTextRegisterFirstName = null;
+    EditText editTextRegisterLastName = null;
+    TextView textViewRegisterAccountErrorMsg = null;
+    Button buttonRegisterAccountButton = null;
+
+    ProgressBar progressIconRegisterAccount = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,10 +48,20 @@ public class RegisterAccountActivity extends AppCompatActivity {
         //Firebase
         mAuth = FirebaseAuth.getInstance();
 
-        // UI components
-        Button registerAccountButton = findViewById(R.id.btnRegisterAccount);
+        // UI
+        editTextRegisterEmail = findViewById(R.id.txtRegisterEmail);
+        editTextRegisterPassword = findViewById(R.id.txtRegisterAccountPassword);
+        editTextRegisterPasswordConfirm = findViewById(R.id.txtRegisterAccountPasswordConfirm);
+        editTextRegisterFirstName = findViewById(R.id.txtRegisterAccountFname);
+        editTextRegisterLastName = findViewById(R.id.txtRegisterAccountLname);
 
-        registerAccountButton.setOnClickListener(new View.OnClickListener() {
+        textViewRegisterAccountErrorMsg = findViewById(R.id.txtRegisterAccountErrorMsg);
+
+        buttonRegisterAccountButton = findViewById(R.id.btnRegisterAccount);
+
+        progressIconRegisterAccount = findViewById(R.id.progressIconRegisterAccount);
+
+        buttonRegisterAccountButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 registerAccount();
@@ -70,53 +91,45 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
         // Variables
         boolean isValid = true;
-
-        // UI
-        EditText registerEmail = findViewById(R.id.txtRegisterEmail);
-        EditText registerPassword = findViewById(R.id.txtRegisterAccountPassword);
-        EditText registerPasswordConfirm = findViewById(R.id.txtRegisterAccountPasswordConfirm);
-        EditText registerFirstName = findViewById(R.id.txtRegisterAccountFname);
-        EditText registerLastName = findViewById(R.id.txtRegisterAccountLname);
-
-        TextView RegisterAccountErrorMsg = findViewById(R.id.txtRegisterAccountErrorMsg);
-
-        // Declare user object
-        User user;
-
+        loadingState();
 
         while(isValid) {
-            isValid = UserServices.checkFieldsAreNotEmpty(registerEmail, registerPassword, registerPasswordConfirm);
+            isValid = UserServices.checkFieldsAreNotEmpty(editTextRegisterEmail, editTextRegisterPassword, editTextRegisterPasswordConfirm);
             if(isValid == false)
             {
-                RegisterAccountErrorMsg.setText("All fields Are Required");
+                textViewRegisterAccountErrorMsg.setText("All fields Are Required");
+                activeState();
                 break;
             }
-            RegisterAccountErrorMsg.setText("");
+            textViewRegisterAccountErrorMsg.setText("");
 
-            isValid = UserServices.validateEmail(registerEmail);
+            isValid = UserServices.validateEmail(editTextRegisterEmail);
             if(isValid == false)
             {
-                RegisterAccountErrorMsg.setText("Email not in correct format");
+                textViewRegisterAccountErrorMsg.setText("Email not in correct format");
+                activeState();
                 break;
             }
-            RegisterAccountErrorMsg.setText("");
+            textViewRegisterAccountErrorMsg.setText("");
 
-            isValid = UserServices.checkPasswordLength(registerPassword);
+            isValid = UserServices.checkPasswordLength(editTextRegisterPassword);
             if(isValid == false)
             {
-                RegisterAccountErrorMsg.setText("Passwords must be at least 8 characters");
+                textViewRegisterAccountErrorMsg.setText("Passwords must be at least 8 characters");
+                activeState();
                 break;
             }
-            RegisterAccountErrorMsg.setText("");
+            textViewRegisterAccountErrorMsg.setText("");
 
-            isValid = UserServices.checkPasswords(registerPassword, registerPasswordConfirm);
+            isValid = UserServices.checkPasswords(editTextRegisterPassword, editTextRegisterPasswordConfirm);
             if(isValid == false)
             {
-                RegisterAccountErrorMsg.setText("Passwords not the same");
+                textViewRegisterAccountErrorMsg.setText("Passwords not the same");
+                activeState();
                 break;
             }
 
-            RegisterAccountErrorMsg.setText("");
+            textViewRegisterAccountErrorMsg.setText("");
 
             if(isValid)
             {
@@ -124,14 +137,14 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 Log.d("VALIDATION:", "success");
 
                 // create user
+                //
+                User user = new User(null, editTextRegisterFirstName.getText().toString(),
+                        editTextRegisterLastName.getText().toString(),
+                        editTextRegisterEmail.getText().toString(), "none");
 
-                user = new User(null,registerFirstName.getText().toString(),
-                        registerLastName.getText().toString(),
-                        registerEmail.getText().toString(), "none");
 
-
-                addUserToFirebaseAuthAndDatabase(registerEmail.getText().toString(), registerPassword.getText().toString(),
-                        RegisterAccountErrorMsg, user);
+                addUserToFirebaseAuthAndDatabase(editTextRegisterEmail.getText().toString(), editTextRegisterPassword.getText().toString(),
+                        textViewRegisterAccountErrorMsg, user);
 
                 break;
             }
@@ -180,8 +193,55 @@ public class RegisterAccountActivity extends AppCompatActivity {
 
                             // set error message
                             RegisterAccountErrorMsg.setText("Error Creating Account");
+
+                            // set UI components back to active
+                            //
+                            activeState();
                         }
                     }
                 });
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        loadingState();
+    }
+
+    // Enable the buttons
+    //
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activeState();
+    }
+
+    // Disable the buttons to open new views
+    //
+    private void loadingState()
+    {
+        editTextRegisterEmail.setEnabled(false);
+        editTextRegisterPassword.setEnabled(false);
+        editTextRegisterPasswordConfirm.setEnabled(false);
+        editTextRegisterFirstName.setEnabled(false);
+        editTextRegisterLastName.setEnabled(false);
+        buttonRegisterAccountButton.setEnabled(false);
+
+        progressIconRegisterAccount.setVisibility(View.VISIBLE);
+    }
+
+    // Enable the buttons
+    //
+    private void activeState()
+    {
+        editTextRegisterEmail.setEnabled(true);
+        editTextRegisterPassword.setEnabled(true);
+        editTextRegisterPasswordConfirm.setEnabled(true);
+        editTextRegisterFirstName.setEnabled(true);
+        editTextRegisterLastName.setEnabled(true);
+        buttonRegisterAccountButton.setEnabled(true);
+
+        progressIconRegisterAccount.setVisibility(View.GONE);
+    }
+
 }
