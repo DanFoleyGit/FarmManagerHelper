@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     // Firebase
     private FirebaseAuth mAuth;
 
+    Boolean isManager = false;
     Button openTimetableActivity = null;
     Button openOrdersBoard = null;
     Button openShippingCalculator = null;
@@ -97,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
             // load the timetable and set it the current hour
             //
-            loadTimeTable();
+            loadTimeTable(currentUser);
+
+            checkIsUserManager(currentUser);
 
         }
 
@@ -110,17 +114,38 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 // need to check if the user is a manager or normal staff
+                if(isManager)
+                {
+                    // open manager timetable activity, without closing the main activity so user can use the back
 
-
-                openTimetableForUserType(currentUser);
+                    startActivity(new Intent(MainActivity.this, ManagerTimetable.class));
+                }
+                else
+                {
+                    // open timetable activity, without closing the main activity so user can use the back
+                    //
+                    startActivity(new Intent(MainActivity.this, StaffTimetable.class));
+                }
             }
         });
 
         openOrdersBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //
-                openOrdersBoardForUserType(currentUser);
+
+                // need to check if the user is a manager or normal staff
+                if(isManager)
+                {
+                    // open Manager orders board activity, without closing the main activity so user can use the back
+                    startActivity(new Intent(MainActivity.this, OrdersBoard.class));
+                }
+                else
+                {
+                    // open orders board activity, without closing the main activity so user can use the back
+                    startActivity(new Intent(MainActivity.this, OrdersBoard.class));
+
+                }
+//                openOrdersBoardForUserType(currentUser);
             }
         });
 
@@ -142,7 +167,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void loadTimeTable() {
+    // Loads the time table for the user and sets the position to the current hour.
+    //
+    private void loadTimeTable(FirebaseUser currentUser) {
 
         // get current date, load template and call updateMainMenuTimeTableWithTodaysDate to get data
         //
@@ -156,39 +183,83 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(timetableAdapter);
 
         TimetableServices.updateMainMenuTimeTableWithTodaysDate(todaysDate, listView, context);
+
+        // Set listener for updates to users timetable
+        //
+        setListenerForNewTasks(currentUser,todaysDate,context,listView);
     }
 
-    private void openOrdersBoardForUserType(FirebaseUser currentUser) {
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
+    // Listener set on that users timetable document. If it is updated it will call updateMainMenuTimeTableWithTodaysDate
+    // to refresh their timetable in realtime
+    //
+    private void setListenerForNewTasks(FirebaseUser currentUser, String todaysDate, Context context, ListView listView) {
+
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
+                DatabaseReference dbUsersInFarmRef =  DatabaseManager.getUsersInFarmDocumentByFarmName(farmId);
+
+                // set a listener on that users ID to trigger when it is updated with tasks
+                //
+                dbUsersInFarmRef.child(currentUser.getUid()).child("timetable").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        TimetableServices.updateMainMenuTimeTableWithTodaysDate(todaysDate, listView, context);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+    }
+
+    //checks if the user is manager and if the user is sets isManager to true
+    //
+    private void checkIsUserManager(FirebaseUser currentUser)
+    {
+        DatabaseReference dbRef = DatabaseManager.getUsersTableDatabaseReference(currentUser.getUid());
 
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
 
-                // get farmId from currentUser
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
+                DatabaseReference dbFarmRef =  DatabaseManager.getFarmDatabaseReferenceByName(farmId);
 
-                // Check if the currentUser Id matches the farms farmManager Value and open appropriate timetable interface
-                if(currentUser.getUid().equals(snapshot.child("farm_table").child(farmId).child("managerID").getValue().toString()))
-                {
-                    // open timetable activity, without closing the main activity so user can use the back
-                    startActivity(new Intent(MainActivity.this, OrdersBoard.class));
-                }
-                else
-                {
-                    // open timetable activity, without closing the main activity so user can use the back
-                    startActivity(new Intent(MainActivity.this, OrdersBoard.class));
+                dbFarmRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (currentUser.getUid().equals(snapshot.child("managerID").getValue().toString()))
+                        {
+                            isManager = true;
+                        }
+                    }
 
-                }
-
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Log.d("error", error.toString());
+                    }
+                });
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Log.d("error", error.toString());
             }
         });
     }
+
+
 
     private boolean checkUserIsInFarm(FirebaseUser currentUser) {
 
@@ -231,7 +302,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // Logout user from user inputs in the action bar
+    // Logout user and leave farm options in the action bar
+    //
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -258,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "User signed out",
                         Toast.LENGTH_SHORT).show();
 
-                // start login intent
+                // start JoinFarm intent
                 startActivity(new Intent(MainActivity.this, JoinFarm.class));
                 finish();
                 break;
@@ -290,37 +362,5 @@ public class MainActivity extends AppCompatActivity {
         openProduceEstimator.setEnabled(true);
         loadingIcon.setVisibility(View.GONE);
 
-    }
-
-    public void openTimetableForUserType(FirebaseUser currentUser) {
-        DatabaseReference dbRef = DatabaseManager.getDatabaseReference();
-
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                // get farmId from currentUser
-                String farmId = snapshot.child("users").child(currentUser.getUid()).child("UserTableFarmId").getValue().toString();
-
-                // Check if the currentUser Id matches the farms farmManager Value and open appropriate timetable interface
-                if(currentUser.getUid().equals(snapshot.child("farm_table").child(farmId).child("managerID").getValue().toString()))
-                {
-                    // open timetable activity, without closing the main activity so user can use the back
-                    startActivity(new Intent(MainActivity.this, ManagerTimetable.class));
-                }
-                else
-                {
-                    // open timetable activity, without closing the main activity so user can use the back
-                    startActivity(new Intent(MainActivity.this, StaffTimetable.class));
-
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 }

@@ -26,9 +26,7 @@ public class ShippingCalculator extends AppCompatActivity {
     private EditText editTextShippingCalcOrderQuantity;
     private Button buttonShippingCalcPerformCalc;
     private Button buttonShippingCalcEditProfiles;
-    private TextView textViewShippingCalcFullPalletsTag;
     private TextView textViewShippingCalcFullPalletsQuantity;
-    private TextView textViewShippingCalcRemainderPalletQuantityTag;
     private TextView textViewShippingCalcRemainderPalletsQuantity;
     private TextView ShippingCalcErrorMsg = null;
     private TextView TextInputLayoutDummyShippingCalcSpinnerText = null;
@@ -47,9 +45,7 @@ public class ShippingCalculator extends AppCompatActivity {
         editTextShippingCalcOrderQuantity = findViewById(R.id.editTextShippingCalcOrderQuantity);
         buttonShippingCalcPerformCalc = findViewById(R.id.buttonShippingCalcPerformCalc);
         buttonShippingCalcEditProfiles = findViewById(R.id.buttonShippingCalcEditProfiles);
-//        textViewShippingCalcFullPalletsTag = findViewById(R.id.textViewShippingCalcFullPalletsTag);
         textViewShippingCalcFullPalletsQuantity = findViewById(R.id.textViewShippingCalcFullPalletsQuantity);
-//        textViewShippingCalcRemainderPalletQuantityTag = findViewById(R.id.textViewShippingCalcRemainderPalletQuantityTag);
         textViewShippingCalcRemainderPalletsQuantity = findViewById(R.id.textViewShippingCalcRemainderPalletsQuantity);
         TextInputLayoutDummyShippingCalcSpinnerText = findViewById(R.id.TextInputLayoutDummyShippingCalcSpinnerText);
         ShippingCalcErrorMsg = findViewById(R.id.ShippingCalcErrorMsg);

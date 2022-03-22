@@ -12,30 +12,37 @@
         android:layout_height="50dp"
         android:layout_weight="66.6"
         android:gravity="center"
+        android:textSize="20sp"
         android:text="Time"
         android:textAlignment="center" />
 
-    <LinearLayout
-        android:orientation="vertical"
+    <TextView
+        android:gravity="center"
+        android:text="TimetableTaskName"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="33.3">
+        android:layout_weight="33.3"
+        android:textSize="16sp"
+        android:layout_height="50dp"
+        android:id="@+id/TextViewTimeSlotTaskName"
+        />
 
-        <TextView
-            android:gravity="center"
-            android:text="TimetableTaskName"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:id="@+id/TextViewTimeSlotTaskName" />
 
-        <TextView
-            android:gravity="center"
-            android:text="TimetableDescription"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:id="@+id/TextViewTimeSlotDescription" />
+    <TextView
+    android:gravity="center"
+    android:text="TimetableDescription"
+    android:layout_width="match_parent"
+    android:layout_height="25dp"
+    android:id="@+id/TextViewTimeSlotDescription"
+    android:visibility="gone"/>
 
-    </LinearLayout>
+    <TextView
+        android:gravity="center"
+        android:text="TimetableDescription"
+        android:layout_width="match_parent"
+        android:layout_height="25dp"
+        android:id="@+id/TextViewTimeSlotTaskId"
+        android:visibility="gone"/>
+
 
 
 </LinearLayout>
