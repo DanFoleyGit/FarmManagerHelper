@@ -152,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithEmail:success");
 
                             // Go to mainactivity
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, LauncherActivity.class));
                             finish();
 
                         } else {

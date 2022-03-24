@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.farmmanagerhelper.models.Product;
 import com.example.farmmanagerhelper.models.TimeSlot;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,7 +27,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -65,45 +63,19 @@ public class MainActivity extends AppCompatActivity {
         listView = (ListView) findViewById(R.id.MainActivityTimeTableListView);
 
 
-        // check if the user is logged. If they are go to the login activity and close main activity
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        // allow current user to be null and open login screen on new startup
-        if(currentUser == null)
-        {
-            Log.d("MainActivity", "User reference is null");
-            Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
-            startActivity(intent);
-            finish();
+        UserEmail.setText("Currently Logged In As " +currentUser.getEmail());
 
-        }
-        else
-        {
-            if(currentUser != null){
+        // load the timetable and set it the current hour
+        //
+        loadTimeTable(currentUser);
 
-                UserEmail.setText("Hello " + currentUser.getEmail());
+        // check if the user is a manager or not for opening the timetable activity
+        //
+        checkIsUserManager(currentUser);
 
-            }
-            // check if the user is in a farm
-            if(checkUserIsInFarm(currentUser))
-            {
-                Log.d("MainActivity", "User checked and is in farm");
-            }
-
-            else{
-                Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-            // load the timetable and set it the current hour
-            //
-            loadTimeTable(currentUser);
-
-            checkIsUserManager(currentUser);
-
-        }
 
 
 
@@ -260,38 +232,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    private boolean checkUserIsInFarm(FirebaseUser currentUser) {
-
-        // get dbref for user id
-        DatabaseReference dbRef = DatabaseManager.getDatabaseRefForUserId(currentUser);
-
-        // variables
-        String stringIndicatingUserIsNotInFarm = "none";
-
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String farmId = snapshot.child("UserTableFarmId").getValue().toString();
-                Log.d("UserTableFarmId is ", snapshot.child("UserTableFarmId").getValue().toString());
-
-
-                    if(farmId.equals(stringIndicatingUserIsNotInFarm))
-                    {
-                        Intent intent = new Intent(MainActivity.this, com.example.farmmanagerhelper.JoinFarm.class);
-                        startActivity(intent);
-                        finish();
-
-                    }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.d("error", error.toString());
-            }
-        });
-        return true;
-    }
 
 
     // Menu Icon in top left

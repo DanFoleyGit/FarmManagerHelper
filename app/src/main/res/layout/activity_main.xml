@@ -38,58 +38,63 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonOpenOrdersActivity"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:text="Orders"
+        app:icon="@drawable/ic_orderboard_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.233"
+        app:layout_constraintHorizontal_bias="0.149"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintVertical_bias="0.599" />
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonOpenTimetableActivity"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:text="Timetable"
+        app:icon="@drawable/ic_timetable_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.769"
+        app:layout_constraintHorizontal_bias="0.877"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+        app:layout_constraintVertical_bias="0.599" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonOpenShioppingCalculatorActivity"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         android:text="Pallet Count"
+        app:icon="@drawable/ic_shipping_calculator_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.233"
+        app:layout_constraintHorizontal_bias="0.148"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80" />
-
-
-
+        app:layout_constraintVertical_bias="0.85" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonOpenProduceEstimator"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:text="Produce Estimator"
+        style="@style/Widget.MaterialComponents.Button.Icon"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.769"
+        app:layout_constraintHorizontal_bias="0.875"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80"
-        />
+        app:layout_constraintVertical_bias="0.85"
+        android:text="Produce Estimator"
+        app:icon="@drawable/ic_produce_estimator_logo"/>
 
     <view
-        android:id="@+id/removeCustomerOrProductPopUp"
+        android:id="@+id/mainActivityTimetableView"
         class="androidx.coordinatorlayout.widget.CoordinatorLayout"
         android:layout_width="250dp"
         android:layout_height="200dp"
@@ -116,14 +121,12 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="12dp"
         android:text="Whats Coming Up"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/removeCustomerOrProductPopUp"
+        app:layout_constraintBottom_toTopOf="@+id/mainActivityTimetableView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

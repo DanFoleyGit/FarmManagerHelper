@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.farmmanagerhelper.models.Farm;
 import com.google.firebase.auth.FirebaseAuth;
@@ -158,8 +161,38 @@ public class CreateFarm extends AppCompatActivity {
             }
 
         }
+    }
 
+    // Menu Icon in top right
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater ().inflate ( R.menu.menu_logout_only,menu );
+        return super.onCreateOptionsMenu ( menu );
 
+    }
+
+    // Logout user options in the action bar
+    //
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+
+            // set up as a case statement to allow extra options if needed
+            case R.id.MenuLogout:
+                // sign out user
+
+                UserServices.SignOutAccount();
+                Toast.makeText(CreateFarm.this, "User signed out",
+                        Toast.LENGTH_SHORT).show();
+
+                // start login intent
+                Intent intent = new Intent(CreateFarm.this, com.example.farmmanagerhelper.LoginActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+
+        }
+        return true;
     }
 
 

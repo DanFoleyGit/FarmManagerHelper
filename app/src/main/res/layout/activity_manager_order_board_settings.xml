@@ -37,15 +37,17 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="20dp"
         android:text=""
         android:textAlignment="center"
         android:textColor="#FF0000"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
 
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.404"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextProductQuantity" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.489" />
 
     <TextView
         android:id="@+id/managerOrderBoardCustomer"
@@ -108,38 +110,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonManagerOrderSettingsAddNewOrder"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
         android:text="Add New Order"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonManagerOrderSettingsAddNewCustomerWindow"
-        android:layout_width="120dp"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:text="Add New Customer"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.257"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonManagerOrderSettingsAddNewOrder" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonManagerOrderSettingsAddNewProduct"
-        android:layout_width="120dp"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:text="Add New Product"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.739"
+        app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonManagerOrderSettingsAddNewOrder" />
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.7" />
 
     <EditText
         android:id="@+id/editTextProductQuantity"
@@ -155,17 +163,19 @@
 
     <!-- add customer popup -->
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/buttonManagerOrderSettingsOpeneDeleteCustomerOrProductPopup"
+        style="?attr/materialButtonOutlinedStyle"
         android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="516dp"
 
+        android:layout_height="wrap_content"
         android:text="Remove Customer Or Product"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintHorizontal_bias="0.50"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.9" />
 
     <view
         android:id="@+id/AddNewCustomerDialog"
@@ -196,10 +206,10 @@
 
         <Button
             android:id="@+id/buttonManagerOrderSettingsAddNewCustomerToDatabase"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="250dp"
-            android:layout_marginStart="75dp"
+            android:layout_marginStart="65dp"
 
             android:text="Add Customer"
             app:layout_constraintEnd_toEndOf="parent"
@@ -268,7 +278,7 @@
 
         <Button
             android:id="@+id/buttonManagerOrderSettingsAddNewProductToDatabase"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="250dp"
             android:layout_marginStart="75dp"
@@ -377,7 +387,7 @@
 
         <Button
             android:id="@+id/buttonManagerOrderSettingsDeleteCustomerOrProduct"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="320dp"
             android:layout_marginStart="75dp"

@@ -783,7 +783,7 @@ public class ToolServices {
         }
         else
         {
-            convertMarginToPercentage = "1." + profile.getMarginForWastage();
+            convertMarginToPercentage = "1.0" + profile.getMarginForWastage();
         }
 
         // Assign Data to variables

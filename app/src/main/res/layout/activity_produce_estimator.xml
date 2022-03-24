@@ -104,13 +104,12 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
+        android:id="@+id/editTextProduceEstimatorQuantityLayout"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:layout_width="250dp"
         android:layout_height="60dp"
         android:layout_margin="50dp"
-
         android:hint="Quantity"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -125,6 +124,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:inputType="number"
+            android:maxLength="10"
             android:maxLines="1"
             android:textSize="18sp"
             android:visibility="visible"/>

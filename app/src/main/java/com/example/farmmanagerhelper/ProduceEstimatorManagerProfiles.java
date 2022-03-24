@@ -3,7 +3,6 @@ package com.example.farmmanagerhelper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.nfc.TagLostException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,9 +35,9 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
     TextInputLayout editTextProduceEstimatorProductWasteMarginLayout = null;
     EditText editTextProduceEstimatorProductWasteMargin = null;
 
-    RadioButton radioProduceEstimatorAddShippingProfile = null;
-    RadioButton radioProduceEstimatorUpdateShippingProfile = null;
-    RadioButton radioProduceEstimatorDeleteShippingCalcProfile = null;
+    RadioButton radioProduceEstimatorAddProfile = null;
+    RadioButton radioProduceEstimatorUpdateProfile = null;
+    RadioButton radioProduceEstimatorDeleteProfile = null;
     RadioButton radioConfirmDeleteProduceEstimatorProfile = null;
 
     TextView ProduceEstimatorProfileErrorMsg = null;
@@ -61,9 +60,9 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
         editTextProduceEstimatorProductWasteMarginLayout = findViewById(R.id.editTextProduceEstimatorProductWasteMarginLayout);
         editTextProduceEstimatorProductWasteMargin = findViewById(R.id.editTextProduceEstimatorProductWasteMargin);
 
-        radioProduceEstimatorAddShippingProfile = findViewById(R.id.radioProduceEstimatorAddShippingProfile);
-        radioProduceEstimatorUpdateShippingProfile = findViewById(R.id.radioProduceEstimatorUpdateShippingProfile);
-        radioProduceEstimatorDeleteShippingCalcProfile = findViewById(R.id.radioProduceEstimatorDeleteShippingCalcProfile);
+        radioProduceEstimatorAddProfile = findViewById(R.id.radioProduceEstimatorAddShippingProfile);
+        radioProduceEstimatorUpdateProfile = findViewById(R.id.radioProduceEstimatorUpdateShippingProfile);
+        radioProduceEstimatorDeleteProfile = findViewById(R.id.radioProduceEstimatorDeleteShippingCalcProfile);
         radioConfirmDeleteProduceEstimatorProfile = findViewById(R.id.radioConfirmDeleteProduceEstimatorProfile);
 
         ProduceEstimatorProfileErrorMsg = findViewById(R.id.ProduceEstimatorProfileErrorMsg);
@@ -84,13 +83,13 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     // if its an update or delete, Validate the spinner
                     // If its an add, validate the EditText for name.
                     //
-                    if(radioProduceEstimatorUpdateShippingProfile.isChecked() || radioProduceEstimatorDeleteShippingCalcProfile.isChecked())
+                    if(radioProduceEstimatorUpdateProfile.isChecked() || radioProduceEstimatorDeleteProfile.isChecked())
                     {
                         isValid = GeneralServices.checkIfSpinnerIsNull(spinnerProduceEstimatorProfileSpinner);
                         ProduceEstimatorProfileErrorMsg.setText("You need to add a new profile first.");
 
                     }
-                    else if(radioProduceEstimatorAddShippingProfile.isChecked())
+                    else if(radioProduceEstimatorAddProfile.isChecked())
                     {
                         isValid = GeneralServices.checkEditTextIsNotNull(editTextProduceEstimatorProfileName.getText().toString());
                         ProduceEstimatorProfileErrorMsg.setText("Please add a profile name.");
@@ -102,7 +101,7 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     }
                     ProduceEstimatorProfileErrorMsg.setText("");
 
-                    if(!radioProduceEstimatorDeleteShippingCalcProfile.isChecked()) {
+                    if(!radioProduceEstimatorDeleteProfile.isChecked()) {
                         isValid = GeneralServices.checkEditTextIsNotNull(editTextProduceEstimatorWeightRawUnits.getText().toString());
                         if (!isValid) {
                             Log.d("ProduceEstimatorManagerProfiles validation :", "No raw unit weight ");
@@ -136,7 +135,7 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                         ProduceEstimatorProfileErrorMsg.setText("");
                     }
 
-                    if(radioProduceEstimatorDeleteShippingCalcProfile.isChecked())
+                    if(radioProduceEstimatorDeleteProfile.isChecked())
                     {
                         if(!radioConfirmDeleteProduceEstimatorProfile.isChecked())
                         {
@@ -148,15 +147,12 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     }
 
                     if (isValid) {
-//                        Toast.makeText(ProduceEstimatorManagerProfiles.this, "Adding New Profile ", Toast.LENGTH_SHORT).show();
 
-
-                        if(radioProduceEstimatorAddShippingProfile.isChecked())
+                        if(radioProduceEstimatorAddProfile.isChecked())
                         {
                             ProduceEstimatorProfile profile = new ProduceEstimatorProfile(editTextProduceEstimatorProfileName.getText().toString(), null,
                                     editTextProduceEstimatorWeightRawUnits.getText().toString(), editTextProduceEstimatorWeightOfFinishedProducts.getText().toString(),
                                     editTextProduceEstimatorProductsPerFinishedUnit.getText().toString(), editTextProduceEstimatorProductWasteMargin.getText().toString());
-
 
                             ToolServices.addNewProduceEstimatorProfile(profile,context);
                             // update the spinner for profiles
@@ -164,7 +160,7 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                             ToolServices.updateSpinnerWithProduceEstimatorProfiles(spinnerProduceEstimatorProfileSpinner,context);
                         }
 
-                        if(radioProduceEstimatorUpdateShippingProfile.isChecked())
+                        if(radioProduceEstimatorUpdateProfile.isChecked())
                         {
                             ProduceEstimatorProfile profile = new ProduceEstimatorProfile(spinnerProduceEstimatorProfileSpinner.getSelectedItem().toString(), null,
                                     editTextProduceEstimatorWeightRawUnits.getText().toString(), editTextProduceEstimatorWeightOfFinishedProducts.getText().toString(),
@@ -172,10 +168,9 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
 
                             Toast.makeText(ProduceEstimatorManagerProfiles.this, "Updating Profile ", Toast.LENGTH_SHORT).show();
                             ToolServices.updateProduceEstimatorProfile(profile,context);
-
                         }
 
-                        if(radioProduceEstimatorDeleteShippingCalcProfile.isChecked())
+                        if(radioProduceEstimatorDeleteProfile.isChecked())
                         {
                             Toast.makeText(ProduceEstimatorManagerProfiles.this, "Deleting Profile ", Toast.LENGTH_SHORT).show();
                             ToolServices.deleteProduceEstimatorProfile(spinnerProduceEstimatorProfileSpinner.getSelectedItem().toString(),context);
@@ -183,7 +178,6 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                             // update the spinner for profiles
                             //
                             ToolServices.updateSpinnerWithProduceEstimatorProfiles(spinnerProduceEstimatorProfileSpinner,context);
-
                         }
 
                         // reset UI components to add new Profile mode
@@ -198,10 +192,9 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
 
                         //reset radio buttons
                         //
-                        radioProduceEstimatorDeleteShippingCalcProfile.setChecked(false);
-                        radioProduceEstimatorUpdateShippingProfile.setChecked(false);
-                        radioProduceEstimatorAddShippingProfile.setChecked(true);
-
+                        radioProduceEstimatorDeleteProfile.setChecked(false);
+                        radioProduceEstimatorUpdateProfile.setChecked(false);
+                        radioProduceEstimatorAddProfile.setChecked(true);
 
                         break;
                     }
@@ -224,7 +217,7 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
             }
         });
 
-        radioProduceEstimatorAddShippingProfile.setOnClickListener(new View.OnClickListener() {
+        radioProduceEstimatorAddProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editTextProduceEstimatorProfileSpinnerLayout.setVisibility(View.GONE);
@@ -234,10 +227,13 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                 editTextProduceEstimatorWeightOfFinishedProducts.setText("");
                 editTextProduceEstimatorProductsPerFinishedUnit.setText("");
                 editTextProduceEstimatorProductWasteMargin.setText("");
+
+                buttonProduceEstimatorProfileSubmit.setText("Add New Profile");
+
             }
         });
 
-        radioProduceEstimatorUpdateShippingProfile.setOnClickListener(new View.OnClickListener() {
+        radioProduceEstimatorUpdateProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 editTextProduceEstimatorProfileName.setEnabled(false);
@@ -249,13 +245,16 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                 //
                 editTextProduceEstimatorProfileName.setText(" ");
 
+                buttonProduceEstimatorProfileSubmit.setText("Update Profile");
+
+
             }
         });
 
-        radioProduceEstimatorDeleteShippingCalcProfile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        radioProduceEstimatorDeleteProfile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(radioProduceEstimatorDeleteShippingCalcProfile.isChecked())
+                if(radioProduceEstimatorDeleteProfile.isChecked())
                 {
                     // hide the form and make only the spinner available
                     //
@@ -276,6 +275,9 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
 
                     editTextProduceEstimatorProfileSpinnerLayout.setVisibility(View.VISIBLE);
                     radioConfirmDeleteProduceEstimatorProfile.setVisibility(View.VISIBLE);
+
+                    buttonProduceEstimatorProfileSubmit.setText("Delete Profile");
+
                 }
                 else
                 {
