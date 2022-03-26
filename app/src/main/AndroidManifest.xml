@@ -8,6 +8,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
         <activity android:name=".LauncherActivity">
             <intent-filter>
@@ -16,22 +17,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ProduceEstimatorManagerProfiles" />
-        <activity android:name=".ProduceEstimator" />
-        <activity android:name=".ShippingCalculatorManagerProfiles" />
-        <activity android:name=".ShippingCalculator" />
-        <activity android:name=".ManagerOrderBoardSettings" />
-        <activity android:name=".OrdersBoard" />
-        <activity android:name=".ManagerViewingStaffTimetable" />
-        <activity android:name=".StaffTimetable" />
-        <activity android:name=".ManagerTimetable" />
-        <activity android:name=".JoinFarm" />
-        <activity android:name=".CreateFarm" />
-        <activity android:name=".RegisterAccountActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ProduceEstimatorManagerProfiles"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ProduceEstimator"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ShippingCalculatorManagerProfiles"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ShippingCalculator"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ManagerOrderBoardSettings"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".OrdersBoard"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ManagerViewingStaffTimetable"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".StaffTimetable"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ManagerTimetable"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".JoinFarm"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CreateFarm"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".RegisterAccountActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait"/>
 
-        </activity>
     </application>
 
 </manifest>
