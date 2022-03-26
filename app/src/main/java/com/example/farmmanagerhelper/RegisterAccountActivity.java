@@ -182,7 +182,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
                             }
 
                             // Go to mainActivity
-                            startActivity(new Intent(RegisterAccountActivity.this, MainActivity.class));
+                            startActivity(new Intent(RegisterAccountActivity.this, LauncherActivity.class));
                             finish();
 
                         }

@@ -30,7 +30,6 @@ public class LauncherActivity extends AppCompatActivity {
 
         Log.d("LauncherActivity", "Checking user to open correct activity");
 
-
         // allow current user to be null and open login screen on new startup
         if(currentUser == null)
         {
@@ -38,13 +37,10 @@ public class LauncherActivity extends AppCompatActivity {
             Intent intent = new Intent(LauncherActivity.this, com.example.farmmanagerhelper.LoginActivity.class);
             startActivity(intent);
             finish();
-
         }
         else
         {
-
             checkUserIsInFarm(currentUser);
-
         }
     }
 
@@ -52,7 +48,6 @@ public class LauncherActivity extends AppCompatActivity {
 
         // get dbref for user id
         DatabaseReference dbRef = DatabaseManager.getDatabaseRefForUserId(currentUser);
-
 
         // variables
         String stringIndicatingUserIsNotInFarm = "none";
@@ -65,22 +60,17 @@ public class LauncherActivity extends AppCompatActivity {
 
                 if(farmId.equals(stringIndicatingUserIsNotInFarm))
                 {
-
                     Log.d("LauncherActivity", "User is not in a farm");
                     Intent intent = new Intent(LauncherActivity.this, com.example.farmmanagerhelper.JoinFarm.class);
                     startActivity(intent);
                     finish();
-
-
                 }
                 else
                 {
-
                     Log.d("LauncherActivity", "User is not in a farm");
                     Intent intent = new Intent(LauncherActivity.this, com.example.farmmanagerhelper.MainActivity.class);
                     startActivity(intent);
                     finish();
-
                 }
             }
 

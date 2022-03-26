@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        UserEmail.setText("Currently Logged In As " +currentUser.getEmail());
+        UserEmail.setText("Logged In as " +currentUser.getEmail());
 
         // load the timetable and set it the current hour
         //
