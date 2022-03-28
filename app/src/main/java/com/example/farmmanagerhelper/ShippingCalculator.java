@@ -1,18 +1,17 @@
 package com.example.farmmanagerhelper;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -87,8 +86,7 @@ public class ShippingCalculator extends AppCompatActivity {
                     {
 
                         ToolServices.getProfileClassAndCallPerformShippingCalc(Integer.parseInt(editTextShippingCalcOrderQuantity.getText().toString()),
-                                spinnerShippingCalculatorProductProfile.getSelectedItem().toString(),textViewShippingCalcFullPalletsQuantity,
-                                textViewShippingCalcRemainderPalletsQuantity);
+                                spinnerShippingCalculatorProductProfile.getSelectedItem().toString(),textViewShippingCalcFullPalletsQuantity);
                         break;
                     }
                 }
@@ -108,7 +106,7 @@ public class ShippingCalculator extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 editTextShippingCalcOrderQuantity.setText("");
                 textViewShippingCalcFullPalletsQuantity.setText("_ pallets by __ units");
-                textViewShippingCalcRemainderPalletsQuantity.setText("_ pallets by __");
+                //textViewShippingCalcRemainderPalletsQuantity.setText("_ pallets by __");
 
                 if(spinnerShippingCalculatorProductProfile.getSelectedItem() != null)
                 {

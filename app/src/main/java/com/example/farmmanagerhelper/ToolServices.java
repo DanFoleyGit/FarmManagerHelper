@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.example.farmmanagerhelper.models.Order;
 import com.example.farmmanagerhelper.models.ProduceEstimatorProfile;
 import com.example.farmmanagerhelper.models.ShippingCalculatorProfile;
 import com.google.firebase.auth.FirebaseAuth;
@@ -338,8 +337,7 @@ public class ToolServices {
     // components that are passed to it.
     //
     public static void getProfileClassAndCallPerformShippingCalc(int quantityToCalculate, String profileName,
-                                                                 TextView textViewShippingCalcFullPalletsQuantity,
-                                                                 TextView textViewShippingCalcRemainderPalletsQuantity) {
+                                                                 TextView textViewShippingCalcFullPalletsQuantity) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
@@ -358,13 +356,15 @@ public class ToolServices {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ShippingCalculatorProfile profile = null;
+                        String result = null;
 
                         // Get the class for that profile and assign it to the text view objects
                         //
                         profile = snapshot.child(profileName).getValue(ShippingCalculatorProfile.class);
 
-                        performShippingCalcAndUpdateUI(quantityToCalculate,profile,
-                                textViewShippingCalcFullPalletsQuantity,textViewShippingCalcRemainderPalletsQuantity);
+                        result = performShippingCalc(quantityToCalculate,profile);
+
+                        textViewShippingCalcFullPalletsQuantity.setText(result);
 
                     }
 
@@ -386,9 +386,8 @@ public class ToolServices {
     // It takes the quantity of products and finds the preferred amount of units per pallet.
     // Then divides the preferred units per pallets by quantity.
     //
-    public static void performShippingCalcAndUpdateUI(int quantityToCalculate, ShippingCalculatorProfile profile,
-                                                      TextView textViewShippingCalcFullPalletsQuantity,
-                                                      TextView textViewShippingCalcRemainderPalletsQuantity) {
+    public static String performShippingCalc(int quantityToCalculate, ShippingCalculatorProfile profile)
+    {
 
         int quantity = quantityToCalculate;
         int pBoxes = Integer.parseInt(profile.getProfilePreferredBoxesPerPallet());
@@ -396,6 +395,7 @@ public class ToolServices {
         int fullPallets = 0;
         int remainderPallet = 0;
         int margin = 0;
+        String result = null;
 
         margin = mBoxes - pBoxes;
         fullPallets = quantity/pBoxes;
@@ -410,12 +410,13 @@ public class ToolServices {
         if(remainderPallet == pBoxes)
         {
             fullPallets++;
-            textViewShippingCalcFullPalletsQuantity.setText( fullPallets + " pallets by " + pBoxes+ " units.");
+            result = fullPallets + " pallets by " + pBoxes+ " units.";
+            return result;
         }
         else
         {
-            textViewShippingCalcFullPalletsQuantity.setText( fullPallets + " pallets by " + pBoxes+ " units.");
-            textViewShippingCalcRemainderPalletsQuantity.setText("1 pallet by " + remainderPallet);
+            result =  fullPallets + " pallets by " + pBoxes+ " units.\n\n" + "1 pallet by " + remainderPallet +".";
+            return result;
         }
     }
 
@@ -735,13 +736,25 @@ public class ToolServices {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ProduceEstimatorProfile profile = null;
+                        float result = 0;
+                        String resultString = null;
+
+                        // Decimal Formatting
+                        //
+                        DecimalFormat df = new DecimalFormat();
+                        df.setMaximumFractionDigits(2);
 
                         // Get the class for that profile and assign it to the text view objects
                         //
                         profile = snapshot.child(profileName).getValue(ProduceEstimatorProfile.class);
 
-                        performProduceEstimationAndUpdateUI(quantityToCalculate,profile,
-                                textViewProduceEstimatorResult);
+                        result = performProduceEstimation(quantityToCalculate,profile);
+
+                        // Format Result
+                        //
+                        resultString = df.format(result)+ " units needed to make " + quantityToCalculate + "\n"  + profile.getProfileName()+ ".";
+
+                        textViewProduceEstimatorResult.setText(resultString);
 
                     }
 
@@ -766,13 +779,7 @@ public class ToolServices {
     // parses the parameters from the profile into variables as integers or floats.
     // The Margin for waste is turned into a percentage using string concat allowed by stringent
     // validation.
-    public static void performProduceEstimationAndUpdateUI(int quantityToCalculate, ProduceEstimatorProfile profile, TextView textViewProduceEstimatorResult) {
-
-        // Decimal Formatting
-        //
-        DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
-
+    public static float performProduceEstimation(int quantityToCalculate, ProduceEstimatorProfile profile) {
 
         // Convert the margin of waste to a percentage
         //
@@ -804,11 +811,7 @@ public class ToolServices {
         //
         numRawUnit = ((((wFinProd * numProdPerFinCrate)* quantityToCalculate) * margin )/wRawUnit);
 
-        // Format Result
-        String result = df.format(numRawUnit)+ " units needed to make " + quantityToCalculate + "\n"  + profile.getProfileName()+ ".";
-
-        textViewProduceEstimatorResult.setText(result);
-
+        return numRawUnit;
     }
 }
 
