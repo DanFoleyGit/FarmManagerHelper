@@ -94,7 +94,8 @@ public class RegisterAccountActivity extends AppCompatActivity {
         loadingState();
 
         while(isValid) {
-            isValid = UserServices.checkFieldsAreNotEmpty(editTextRegisterEmail, editTextRegisterPassword, editTextRegisterPasswordConfirm);
+            isValid = UserServices.checkFieldsAreNotEmpty(editTextRegisterEmail.getText().toString(),
+                    editTextRegisterPassword.getText().toString(), editTextRegisterPasswordConfirm.getText().toString());
             if(isValid == false)
             {
                 textViewRegisterAccountErrorMsg.setText("All fields Are Required");
@@ -103,7 +104,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
             }
             textViewRegisterAccountErrorMsg.setText("");
 
-            isValid = UserServices.validateEmail(editTextRegisterEmail);
+            isValid = UserServices.validateEmail(editTextRegisterEmail.getText().toString());
             if(isValid == false)
             {
                 textViewRegisterAccountErrorMsg.setText("Email not in correct format");
@@ -112,7 +113,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
             }
             textViewRegisterAccountErrorMsg.setText("");
 
-            isValid = UserServices.checkPasswordLength(editTextRegisterPassword);
+            isValid = UserServices.checkPasswordLength(editTextRegisterPassword.getText().toString());
             if(isValid == false)
             {
                 textViewRegisterAccountErrorMsg.setText("Passwords must be at least 8 characters");
@@ -121,7 +122,7 @@ public class RegisterAccountActivity extends AppCompatActivity {
             }
             textViewRegisterAccountErrorMsg.setText("");
 
-            isValid = UserServices.checkPasswords(editTextRegisterPassword, editTextRegisterPasswordConfirm);
+            isValid = UserServices.checkPasswords(editTextRegisterPassword.getText().toString(), editTextRegisterPasswordConfirm.getText().toString());
             if(isValid == false)
             {
                 textViewRegisterAccountErrorMsg.setText("Passwords not the same");

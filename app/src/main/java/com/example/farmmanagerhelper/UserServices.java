@@ -1,12 +1,9 @@
 package com.example.farmmanagerhelper;
 
-import android.text.TextUtils;
 import android.util.Log;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
-import com.example.farmmanagerhelper.models.Order;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -14,7 +11,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 
@@ -24,11 +20,11 @@ UserServices provides validation and Firebase Functionality to Login and Registe
 public class UserServices {
     // check passwords match
 
-    public static boolean checkPasswords(EditText pWord, EditText pWordCon)
+    public static boolean checkPasswords(String pWord, String pWordCon)
     {
-        Log.d("password is ", pWord.getText().toString());
-        Log.d("password confirm is ", pWordCon.getText().toString());
-        if(!pWord.getText().toString().equals(pWordCon.getText().toString()))
+        Log.d("password is ", pWord);
+        Log.d("password confirm is ", pWordCon);
+        if(!pWord.equals(pWordCon))
         {
             return false;
         }
@@ -36,10 +32,10 @@ public class UserServices {
         return true;
     }
 
-    public static boolean checkPasswordLength(EditText pWord)
+    public static boolean checkPasswordLength(String pWord)
     {
         //check the length of password
-        if(pWord.getText().toString().length() < 8)
+        if(pWord.length() < 8)
         {
             return false;
         }
@@ -47,10 +43,9 @@ public class UserServices {
         return true;
     }
 
-    public static boolean checkEmailAndpasswordAreNotEmpty(EditText email, EditText pWord)
+    public static boolean checkEmailAndPasswordAreNotEmpty(String email, String pWord)
     {
-        if(TextUtils.isEmpty(email.getText().toString()) ||
-                TextUtils.isEmpty(pWord.getText().toString()) )
+        if(email.length() < 1|| pWord.length() < 1 )
         {
             return false;
         }
@@ -58,11 +53,9 @@ public class UserServices {
         return true;
     }
 
-    public static boolean checkFieldsAreNotEmpty(EditText email, EditText pWord, EditText pWordConf)
+    public static boolean checkFieldsAreNotEmpty(String email, String pWord, String pWordConf)
     {
-        if(TextUtils.isEmpty(email.getText().toString()) ||
-                TextUtils.isEmpty(pWord.getText().toString()) ||
-                TextUtils.isEmpty(pWordConf.getText().toString()))
+        if(email.length() < 1 || pWord.length() < 1 || pWordConf.length() < 1)
         {
             return false;
         }
@@ -73,12 +66,12 @@ public class UserServices {
 
 
     // Check if the password is in email format allowing for text.text@mailprovider.co.uk
-    public static boolean validateEmail(EditText email)
+    public static boolean validateEmail(String email)
     {
         String regex = "^^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
 
-        if (email.getText().toString().matches("^^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
+        if (email.matches("^^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"))
         {
             return true;
         }

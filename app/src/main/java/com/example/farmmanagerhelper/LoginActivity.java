@@ -1,8 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +9,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -101,7 +101,8 @@ public class LoginActivity extends AppCompatActivity {
             // call validation
             while(isValid)
             {
-                isValid = UserServices.checkEmailAndpasswordAreNotEmpty(loginEmail, loginPassword);
+                isValid = UserServices.checkEmailAndPasswordAreNotEmpty(loginEmail.getText().toString(),
+                        loginPassword.getText().toString());
                 if(isValid == false)
                 {
                     loginErrorMsg.setText("All fields Are Required");
@@ -110,7 +111,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 loginErrorMsg.setText("");
 
-                isValid = UserServices.validateEmail(loginEmail);
+                isValid = UserServices.validateEmail(loginEmail.getText().toString());
                 if(isValid == false)
                 {
                     loginErrorMsg.setText("Email not in correct format");
@@ -119,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 loginErrorMsg.setText("");
 
-                isValid = UserServices.checkPasswordLength(loginPassword);
+                isValid = UserServices.checkPasswordLength(loginPassword.getText().toString());
                 if(isValid == false)
                 {
                     loginErrorMsg.setText("Passwords must be at least 8 characters");
