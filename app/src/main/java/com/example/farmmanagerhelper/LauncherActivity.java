@@ -1,11 +1,11 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +31,7 @@ public class LauncherActivity extends AppCompatActivity {
         Log.d("LauncherActivity", "Checking user to open correct activity");
 
         // allow current user to be null and open login screen on new startup
+        //
         if(currentUser == null)
         {
             Log.d("LauncherActivity", "User reference is null");
