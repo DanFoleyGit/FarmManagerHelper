@@ -43,6 +43,9 @@
         android:layout_height="100dp"
         android:text="Orders"
         app:icon="@drawable/ic_orderboard_logo"
+        app:iconSize="40dp"
+        app:iconPadding="8dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.149"
@@ -56,8 +59,10 @@
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="150dp"
         android:layout_height="100dp"
-        android:text="Timetable"
+        android:text="Time table"
         app:icon="@drawable/ic_timetable_logo"
+        app:iconSize="40dp"
+        app:iconPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.877"
@@ -72,6 +77,8 @@
         android:layout_height="100dp"
         android:text="Pallet Count"
         app:icon="@drawable/ic_shipping_calculator_logo"
+        app:iconSize="40dp"
+        app:iconPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.148"
@@ -90,8 +97,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85"
-        android:text="Produce Estimator"
-        app:icon="@drawable/ic_produce_estimator_logo"/>
+        android:text="Estimate Produce For Order"
+        app:icon="@drawable/ic_produce_estimator_logo"
+        app:iconSize="35dp"
+        app:iconPadding="0dp"/>
 
     <view
         android:id="@+id/mainActivityTimetableView"

@@ -1,8 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,11 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.farmmanagerhelper.models.TimeSlot;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        UserEmail.setText("Logged In as " +currentUser.getEmail());
+        UserEmail.setText( currentUser.getEmail());
 
         // load the timetable and set it the current hour
         //
@@ -234,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    // Menu Icon in top left
+    // Menu Icon in top right
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater ().inflate ( R.menu.menu,menu );
