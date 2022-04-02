@@ -1,6 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import android.text.Editable;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -9,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 public class GeneralServices {
 
@@ -61,5 +61,24 @@ public class GeneralServices {
         {
             return true;
         }
+    }
+
+    // Validates that any of the inputs do not contain a string
+    //
+    public static boolean checkStringDoesNotContainForwardSlashCharacter(String input)
+    {
+        String regex = "[/]+";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+
+        if(input.matches(".*[/].*$"))
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+
     }
 }

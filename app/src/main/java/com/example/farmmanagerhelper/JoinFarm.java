@@ -1,8 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +11,9 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -86,6 +86,23 @@ public class JoinFarm extends AppCompatActivity {
             }
             joinFarmErrorMessage.setText("");
 
+            isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(joinFarmName.getText().toString());
+            if (!isValid) {
+                Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                activeState();
+                joinFarmErrorMessage.setText("Can not use \" / \" in inputs");
+                break;
+            }
+            joinFarmErrorMessage.setText("");
+
+            isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(joinFarmPassCode.getText().toString());
+            if (!isValid) {
+                Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                activeState();
+                joinFarmErrorMessage.setText("Can not use \" / \" in inputs");
+                break;
+            }
+            joinFarmErrorMessage.setText("");
 
             isValid = (FarmService.InputsDontContainWhiteSpaces(joinFarmName.getText().toString(),joinFarmPassCode.getText().toString()));
             if(!isValid)
@@ -96,6 +113,8 @@ public class JoinFarm extends AppCompatActivity {
                 break;
             }
             joinFarmErrorMessage.setText("");
+
+
 
 
             if(isValid)

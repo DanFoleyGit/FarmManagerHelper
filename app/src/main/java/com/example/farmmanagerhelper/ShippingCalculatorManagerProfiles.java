@@ -1,8 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +11,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.farmmanagerhelper.models.ShippingCalculatorProfile;
 import com.google.android.material.textfield.TextInputLayout;
@@ -80,8 +79,7 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
                 Boolean isValid = true;
 
                 Log.d("ShippingCalculatorManagerProfiles validation :", "Beginning");
-
-
+                
                 while (isValid) {
 
                     // check if the user is updating or adding a new profile.
@@ -95,16 +93,23 @@ public class ShippingCalculatorManagerProfiles extends AppCompatActivity {
                     }
                     else if(radioAddShippingProfile.isChecked())
                     {
+
                         isValid = GeneralServices.checkEditTextIsNotNull(editTextShippingCalcProfileName.getText().toString());
-                        ShippingCalcProfileErrorMsg.setText("Please fill in all details");
-                    }
+                        if(!isValid) {
+                            ShippingCalcProfileErrorMsg.setText("Please add a profile name.");
+                            Log.d("ProduceEstimatorManagerProfiles validation :", "No profile name");
+                            break;
+                        }
+                        ShippingCalcProfileErrorMsg.setText("");
 
-                    if (!isValid) {
-                        Log.d("ShippingCalculatorManagerProfiles validation :", "No profile name");
-                        break;
+                        isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(editTextShippingCalcProfileName.getText().toString());
+                        if(!isValid) {
+                            ShippingCalcProfileErrorMsg.setText("Can not use \" / \" in inputs");
+                            Log.d("ProduceEstimatorManagerProfiles validation :", "No profile name");
+                            break;
+                        }
+                        ShippingCalcProfileErrorMsg.setText("");
                     }
-                    ShippingCalcProfileErrorMsg.setText("");
-
 
                     // If the user is adding or updating a new profile, validate the fields
                     //

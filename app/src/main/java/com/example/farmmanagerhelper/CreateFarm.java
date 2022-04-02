@@ -1,8 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +12,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.farmmanagerhelper.models.Farm;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,7 +24,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 public class CreateFarm extends AppCompatActivity {
-
 
     //firebase
     FirebaseAuth mAuth = null;
@@ -103,6 +102,24 @@ public class CreateFarm extends AppCompatActivity {
             createFarmErrorMessage.setText("");
 
             Log.d("CreateFarm check if inputs have whitespaces:", createFarmName.getText().toString());
+
+            isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(createFarmName.getText().toString());
+            if (!isValid) {
+                Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                activeState();
+                createFarmErrorMessage.setText("Can not use \" / \" in inputs");
+                break;
+            }
+            createFarmErrorMessage.setText("");
+
+            isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(createFarmPassCode.getText().toString());
+            if (!isValid) {
+                Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                activeState();
+                createFarmErrorMessage.setText("Can not use \" / \" in inputs");
+                break;
+            }
+            createFarmErrorMessage.setText("");
 
             isValid = (FarmService.InputsDontContainWhiteSpaces(createFarmName.getText().toString(),createFarmPassCode.getText().toString()));
             if(!isValid)

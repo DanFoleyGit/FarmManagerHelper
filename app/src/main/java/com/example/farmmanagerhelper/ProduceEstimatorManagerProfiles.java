@@ -1,7 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +12,8 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.farmmanagerhelper.models.ProduceEstimatorProfile;
 import com.google.android.material.textfield.TextInputLayout;
@@ -92,14 +92,22 @@ public class ProduceEstimatorManagerProfiles extends AppCompatActivity {
                     else if(radioProduceEstimatorAddProfile.isChecked())
                     {
                         isValid = GeneralServices.checkEditTextIsNotNull(editTextProduceEstimatorProfileName.getText().toString());
-                        ProduceEstimatorProfileErrorMsg.setText("Please add a profile name.");
-                    }
+                        if(!isValid) {
+                            ProduceEstimatorProfileErrorMsg.setText("Please add a profile name.");
+                            Log.d("ProduceEstimatorManagerProfiles validation :", "No profile name");
+                            break;
+                        }
+                        ProduceEstimatorProfileErrorMsg.setText("");
 
-                    if (!isValid) {
-                        Log.d("ProduceEstimatorManagerProfiles validation :", "No profile name");
-                        break;
+                        isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(editTextProduceEstimatorProfileName.getText().toString());
+                        if(!isValid) {
+                            ProduceEstimatorProfileErrorMsg.setText("Can not use \\\" / \\\" in inputs");
+                            Log.d("ProduceEstimatorManagerProfiles validation :", "No profile name");
+                            break;
+                        }
+                        ProduceEstimatorProfileErrorMsg.setText("");
+
                     }
-                    ProduceEstimatorProfileErrorMsg.setText("");
 
                     if(!radioProduceEstimatorDeleteProfile.isChecked()) {
                         isValid = GeneralServices.checkEditTextIsNotNull(editTextProduceEstimatorWeightRawUnits.getText().toString());

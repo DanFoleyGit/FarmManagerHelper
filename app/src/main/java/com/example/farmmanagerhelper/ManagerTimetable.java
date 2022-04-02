@@ -1,8 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,25 +10,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.farmmanagerhelper.models.TimeSlot;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.farmmanagerhelper.models.TimetableTask;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
 
 // create list view
@@ -136,6 +122,15 @@ public class ManagerTimetable extends AppCompatActivity {
                     if (!isValid) {
                         Log.d("ManagerTimetable validation :", "empty inputs");
                         errorMessage.setText("Inputs must be filled in");
+                        break;
+                    }
+                    errorMessage.setText("");
+
+
+                    isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(editTextTaskName.getText().toString());
+                    if (!isValid) {
+                        Log.d("ManagerTimetable validation :", "Forward slash found in string");
+                        errorMessage.setText("Can not use \" / \" in inputs");
                         break;
                     }
                     errorMessage.setText("");

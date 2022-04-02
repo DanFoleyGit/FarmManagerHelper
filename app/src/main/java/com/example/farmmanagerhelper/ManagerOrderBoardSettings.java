@@ -1,7 +1,5 @@
 package com.example.farmmanagerhelper;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +14,8 @@ import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.farmmanagerhelper.models.Customer;
 import com.example.farmmanagerhelper.models.Order;
@@ -159,6 +159,14 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                     }
                     formErrorMsg.setText("");
 
+                    isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(formEditTextProductQuantity.getText().toString());
+                    if (!isValid) {
+                        Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                        formErrorMsg.setText("Can not use \" / \" in inputs");
+                        break;
+                    }
+                    formErrorMsg.setText("");
+
                     if(isValid)
                     {
                         Order order = new Order(null, formEditTextDatePicker.getText().toString(),
@@ -264,6 +272,14 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                     if (!isValid) {
                         Log.d("ManagerOrderBoardSettings validation :", "empty inputs");
                         textViewAddCustomerErrorMsg.setText("Input a Customer Name.");
+                        break;
+                    }
+                    textViewAddCustomerErrorMsg.setText("");
+
+                    isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(EditTextAddNewCustomerName.getText().toString());
+                    if (!isValid) {
+                        Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                        textViewAddCustomerErrorMsg.setText("Can not use \" / \" in inputs");
                         break;
                     }
                     textViewAddCustomerErrorMsg.setText("");
@@ -396,6 +412,14 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                     if (!isValid) {
                         Log.d("ManagerOrderBoardSettings validation :", "empty inputs");
                         textViewAddProductErrorMsg.setText("Input a Customer Name.");
+                        break;
+                    }
+                    textViewAddProductErrorMsg.setText("");
+
+                    isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(EditTextAddNewProductName.getText().toString());
+                    if (!isValid) {
+                        Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                        textViewAddProductErrorMsg.setText("Can not use \" / \" in inputs");
                         break;
                     }
                     textViewAddProductErrorMsg.setText("");

@@ -104,6 +104,24 @@ public class RegisterAccountActivity extends AppCompatActivity {
             }
             textViewRegisterAccountErrorMsg.setText("");
 
+            isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(editTextRegisterFirstName.getText().toString());
+            if (!isValid) {
+                Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                activeState();
+                textViewRegisterAccountErrorMsg.setText("Can not use \" / \" in inputs");
+                break;
+            }
+            textViewRegisterAccountErrorMsg.setText("");
+
+            isValid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(editTextRegisterLastName.getText().toString());
+            if (!isValid) {
+                Log.d("ManagerOrderBoardSettings validation :", "Forward slash found in string");
+                activeState();
+                textViewRegisterAccountErrorMsg.setText("Can not use \" / \" in inputs");
+                break;
+            }
+            textViewRegisterAccountErrorMsg.setText("");
+
             isValid = UserServices.validateEmail(editTextRegisterEmail.getText().toString());
             if(isValid == false)
             {
@@ -130,7 +148,6 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 break;
             }
 
-            textViewRegisterAccountErrorMsg.setText("");
 
             if(isValid)
             {
@@ -150,6 +167,16 @@ public class RegisterAccountActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    private boolean checkInputsForForwardSlashes(String firstName, String lastName) {
+        boolean  valid = true;
+
+        valid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(firstName);
+
+        valid = GeneralServices.checkStringDoesNotContainForwardSlashCharacter(lastName);
+
+         return valid;
     }
 
     private void addUserToFirebaseAuthAndDatabase(String email, String password, TextView RegisterAccountErrorMsg, User user) {
