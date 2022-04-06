@@ -2,7 +2,16 @@ The application will be designed to help farmers organize their working day by c
 ing jobs and orders to be completed. It will also provide an extra feature of tools to help with
 reoccurring daily tasks that can be prone to human error.
 
-#### It will include the following features:
+#### To run the app:
+- copy the URL of the repository.
+- Open Android Studio and select "Get from version control".
+- Select Git and paste the URL of the repo.
+- Create teh porject and allow it to build.
+- The project can then be run on an emulator or physical device.
+
+
+
+#### It includes the following features:
 - Allow managers to create a new “farm” on the app and allow staff to join the farm
 using a farm ID and password.
 - A scheduler that can be set by the farm manager and viewed by staff.
