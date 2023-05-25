@@ -1,8 +1,6 @@
 package com.example.farmmanagerhelper;
 
-import android.content.Context;
 import android.util.Log;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 
@@ -23,7 +21,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class DatabaseManager {
@@ -115,16 +112,11 @@ public class DatabaseManager {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference dbRef = database.getReference();
 
-        // add user object to the table making the user ID the child node/ primary key
         dbRef.child("farm_table").child(farm.farmName).setValue(farm);
         Log.d("Database access: "," Created new farm table" );
 
-        // might need to search for the farm, and thn add the user in farm to the list
-        // as a new child node
         dbRef.child("farm_table").child(farm.farmName).child("usersInFarm").child(farm.managerID).setValue(farm.managerID);
 
-        // add farm to user
-        //
         AddFarmNameToUserAndUserToFarm(farm.farmName,farm.managerID);
 
         return true;
@@ -155,10 +147,8 @@ public class DatabaseManager {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("DatabaseManager AddFarmNameToUserAndUserToFarm","Error adding user to farm");
-
             }
         });
-
     }
 
     // example of how to use this

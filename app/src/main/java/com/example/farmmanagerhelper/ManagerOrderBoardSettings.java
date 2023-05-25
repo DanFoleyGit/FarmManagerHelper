@@ -145,8 +145,8 @@ public class ManagerOrderBoardSettings extends AppCompatActivity {
                     isValid = GeneralServices.checkIfSpinnerIsNull(formSpinnerProducts);
                     if (!isValid) {
                         Log.d("ManagerOrderBoardSettings validation :", "No products selected");
-                        formErrorMsg.setText("You must add a Product for " + formSpinnerCustomers.getSelectedItem()+
-                                ". Click Add New Product button below");
+                        formErrorMsg.setText("You must add a Product for " + formSpinnerCustomers
+                                .getSelectedItem() + ". Click Add New Product button below");
                         break;
                     }
                     formErrorMsg.setText("");
