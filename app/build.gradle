@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'org.jetbrains.kotlin.android'
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.example.farmmanagerhelper"
         minSdkVersion 24
-        targetSdkVersion 30
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -46,6 +47,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.annotation:annotation:1.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'com.google.truth:truth:1.1.3'

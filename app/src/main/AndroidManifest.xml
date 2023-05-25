@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme">
-        <activity android:name=".LauncherActivity">
+        <activity android:name=".LauncherActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,32 +19,46 @@
             </intent-filter>
         </activity>
         <activity android:name=".ProduceEstimatorManagerProfiles"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".ProduceEstimator"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".ShippingCalculatorManagerProfiles"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".ShippingCalculator"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".ManagerOrderBoardSettings"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".OrdersBoard"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".ManagerViewingStaffTimetable"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".StaffTimetable"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".ManagerTimetable"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".JoinFarm"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".CreateFarm"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".RegisterAccountActivity"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".LoginActivity"
+            android:exported="true"
             android:screenOrientation="portrait"/>
         <activity android:name=".MainActivity"
+            android:exported="true"
             android:screenOrientation="portrait"/>
 
     </application>
